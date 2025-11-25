@@ -6,6 +6,15 @@ import authRoutes from "./auth.routes.js";
 
 const router = Router();
 
+
+// dashboard
+router.get("/dashboard", (req, res) => {
+  const toast = req.session.toast;  // Toast from login
+  req.session.toast = null;         // Clear it
+  res.render("dashboard/dashboard", { toast });
+});
+
+
 // Use routes
 router.use("/auth", authRoutes);
 // router.use("/courses", courseRoutes);

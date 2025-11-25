@@ -1,0 +1,10 @@
+extends ../layouts/main.pug
+
+block content
+  h2 Dashboard Page
+
+block scripts
+  if toast
+    script.
+      showToast("#{toast}")
+      console.log("dashboard script loaded");
