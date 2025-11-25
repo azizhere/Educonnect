@@ -1,14 +1,14 @@
-const express = require("express");
-const router = express.Router();
+import { Router } from "express";
 
-// Import route files
-const authRoutes = require("./auth.routes");
-const courseRoutes = require("./course.routes");
-const assignmentRoutes = require("./assignment.routes");
+import authRoutes from "./auth.routes.js";
+// import courseRoutes from "./course.routes.js";
+// import assignmentRoutes from "./assignment.routes.js";
+
+const router = Router();
 
 // Use routes
 router.use("/auth", authRoutes);
-router.use("/courses", courseRoutes);
-router.use("/assignments", assignmentRoutes);
+// router.use("/courses", courseRoutes);
+// router.use("/assignments", assignmentRoutes);
 
-module.exports = router;
+export default router;

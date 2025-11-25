@@ -1,33 +1,33 @@
-const bcrypt = require("bcryptjs");
-const User = require("../models/User.model");
+import bcrypt from "bcryptjs";
+import { findByEmail, createUser } from "../models/User.model.js";
 
-module.exports = {
-  // Register new user
-  async register({ name, email, password, role }) {
-    // 1. Check if email already exists
-    const existingUser = await User.findByEmail(email);
-    if (existingUser) {
-      return {
-        success: false,
-        message: "Email already exists"
-      };
-    }
-
-    // 2. Hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    // 3. Create new user
-    const newUser = await User.createUser({
-      name,
-      email,
-      password: hashedPassword,
-      role,
-    });
-
+export const register = async ({ name, email, password, role }) => {
+  // 1. Check if email already exists
+  const existingUser = await findByEmail(email);
+  if (existingUser) {
     return {
-      success: true,
-      message: "User registered successfully",
-      user: newUser,
+      success: false,
+      message: "Email already exists",
     };
   }
+
+  // 2. Hash password
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  // 3. Create user in DB
+  const newUser = await createUser({
+    name,
+    email,
+    password: hashedPassword,
+    role,
+  });
+
+  return {
+    success: true,
+    message: "User registered successfully",
+    user: newUser,
+  };
+};
+export default {
+  register,
 };

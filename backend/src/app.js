@@ -1,7 +1,12 @@
-const express = require("express");
+import express from "express";
+import path from "path";
+import routes from "./routes/index.js";
+import { fileURLToPath } from "url";
+
 const app = express();
-const path = require("path");
-const routes = require("./routes/index");
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Body parser
 app.use(express.json());
@@ -17,4 +22,4 @@ app.set("view engine", "pug");
 // Use routes
 app.use("/", routes);
 
-module.exports = app;
+export default app;

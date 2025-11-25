@@ -1,46 +1,54 @@
-const pool = require("../config/db");
-const { v4: uuidv4 } = require("uuid");
+import pool from "../config/db.js";
+import { v4 as uuidv4 } from "uuid";
 
-// Ensure table exists (Auto-Create on Server Start)
-const createUserTable = async () => {
+// Ensure table exists
+export const createUserTable = async () => {
   const query = `
     CREATE TABLE IF NOT EXISTS users (
-      id UUID PRIMARY KEY,
+      id VARCHAR(36) PRIMARY KEY,
       name VARCHAR(100) NOT NULL,
       email VARCHAR(150) UNIQUE NOT NULL,
       password TEXT NOT NULL,
       role VARCHAR(20) DEFAULT 'student',
       status VARCHAR(20) DEFAULT 'active',
-      last_login TIMESTAMP NULL,
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    )
+      last_login DATETIME NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    );
   `;
-  await pool.query(query);
+
+  await pool.execute(query);
 };
 
 createUserTable();
 
-module.exports = {
-  async createUser({ name, email, password, role }) {
-    const id = uuidv4();
+// ✅ Create User
+export const createUser = async ({ name, email, password, role }) => {
+  const id = uuidv4();
 
-    const query = `
-      INSERT INTO users (id, name, email, password, role)
-      VALUES ($1, $2, $3, $4, $5)
-      RETURNING id, name, email, role, status, created_at
-    `;
+  const query = `
+    INSERT INTO users (id, name, email, password, role)
+    VALUES (?, ?, ?, ?, ?)
+  `;
 
-    const values = [id, name, email, password, role];
+  const values = [id, name, email, password, role];
 
-    const result = await pool.query(query, values);
-    return result.rows[0];
-  },
+  await pool.execute(query, values);
 
-  async findByEmail(email) {
-    const result = await pool.query("SELECT * FROM users WHERE email=$1", [
-      email,
-    ]);
-    return result.rows[0];
-  },
+  return {
+    id,
+    name,
+    email,
+    role,
+    status: "active",
+  };
+};
+
+// ✅ Find By Email
+export const findByEmail = async (email) => {
+  const query = "SELECT * FROM users WHERE email = ?";
+
+  const [rows] = await pool.execute(query, [email]);
+
+  return rows[0];
 };
