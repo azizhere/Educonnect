@@ -1,7 +1,11 @@
-export const isLoggedIn = (req, res, next) => {
-  if (!req.session.user) {
-    req.session.toast = "Please login first";
-    return res.redirect("/auth/login");
+export const auth = (req, res, next) => {
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token) return res.status(401).json({ message: "No token" });
+
+  try {
+    req.user = jwt.verify(token, process.env.JWT_SECRET);
+    next();
+  } catch (err) {
+    res.status(401).json({ message: "Invalid token" });
   }
-  next();
 };
