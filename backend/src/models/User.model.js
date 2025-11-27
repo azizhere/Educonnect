@@ -4,17 +4,17 @@ import { v4 as uuidv4 } from "uuid";
 // Ensure table exists
 export const createUserTable = async () => {
   const query = `
-    CREATE TABLE IF NOT EXISTS users (
-      id VARCHAR(36) PRIMARY KEY,
-      name VARCHAR(100) NOT NULL,
-      email VARCHAR(150) UNIQUE NOT NULL,
-      password TEXT NOT NULL,
-      role VARCHAR(20) DEFAULT 'student',
-      status VARCHAR(20) DEFAULT 'active',
-      last_login DATETIME NULL,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-    );
+  CREATE TABLE IF NOT EXISTS users (
+  id VARCHAR(36) PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  email VARCHAR(150) UNIQUE NOT NULL,
+  password TEXT NOT NULL,
+  role ENUM('admin','teacher','student') DEFAULT 'student',
+  status ENUM('active','inactive') DEFAULT 'active',
+  last_login DATETIME NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
   `;
 
   await pool.execute(query);

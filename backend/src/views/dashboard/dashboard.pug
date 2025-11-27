@@ -1,7 +1,13 @@
 extends ../layouts/main.pug
 
 block content
-  h2 Dashboard Page
+  //- include ../partials/navbar.pug
+
+  .container(style="max-width:500px; margin-top:40px;")
+    h2 Dashboard Page
+    p this is the main dashboard page 
+
+  //- include ../partials/footer.pug
 
 block scripts
   if toast

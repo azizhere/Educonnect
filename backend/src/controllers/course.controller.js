@@ -1,5 +1,6 @@
 import courseService from "../services/course.service.js";
 import { sendResponse } from "../utils/response.js";
+import { getAllCourses } from "../models/Course.model.js";
 
 export const addCourse = async (req, res) => {
   try {
@@ -43,5 +44,16 @@ export const deleteCourseController = async (req, res) => {
 
   } catch (err) {
     return sendResponse(res, 500, false, "Error deleting course");
+  }
+};
+
+
+export const coursesPage = async (req, res) => {
+  try {
+    const courses = await getAllCourses();
+    res.render("course/courses", { courses });
+  } catch (err) {
+    console.log(err);
+    res.render("courses", { courses: [] });
   }
 };

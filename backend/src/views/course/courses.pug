@@ -1,0 +1,23 @@
+extends ../layouts/main.pug
+
+block content
+  .container.mt-4
+    h2.mb-4 Courses List
+
+    table.table.table-striped.table-hover.shadow-sm
+      thead(style="background:#f0f0f0;")
+        tr
+          th ID
+          th Title
+          th Description
+          th Instructor
+          th Created At
+
+      tbody
+        each course in courses
+          tr
+            td= course.fid
+            td= course.title
+            td= course.description
+            td= course.instructor_name
+            td= new Date(course.created_at).toLocaleDateString()

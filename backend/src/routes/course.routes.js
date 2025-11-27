@@ -3,18 +3,20 @@ import {
   addCourse,
   getCourses,
    updateCourseController,
-  deleteCourseController
+  deleteCourseController,
+  coursesPage
 } from "../controllers/course.controller.js";
 
 const router = Router();
 
-router.post("/", addCourse);     // create
-router.get("/", getCourses);     // list
+// ---------------- UI PAGE ROUTE ----------------
+router.get("/", coursesPage);
 
-// Update course
-router.put("/:id", updateCourseController);
+// ---------------- API ROUTES -------------------
+router.get("/api", getCourses);          // list
+router.post("/api", addCourse);          // create
+router.put("/api/:id", updateCourseController);  // update
+router.delete("/api/:id", deleteCourseController); // delete
 
-// Delete course
-router.delete("/:id", deleteCourseController);
 
 export default router;
