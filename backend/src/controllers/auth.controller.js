@@ -1,42 +1,6 @@
 import authService from "../services/auth.service.js";
-import { registerValidation } from "../validations/auth.validation.js";
 import { sendResponse } from "../utils/response.js";
-
-export const register = async (req, res) => {
-  try {
-    // 1. Validate input
-    const { error } = registerValidation.validate(req.body);
-    if (error) {
-      // return sendResponse(res, 400, false, error.details[0].message);
-      return res.render("auth/register", { message: error.details[0].message });
-    }
-
-    const { name, email, password, role } = req.body;
-
-    // 2. Use auth service to register user
-    const result = await authService.register({
-      name,
-      email,
-      password,
-      role,
-    });
-
-    if (!result.success) {
-      // return sendResponse(res, 400, false, result.message);
-      return res.render("auth/register", { message: result.message });
-    }
-
-    // 3. Success
-    // return sendResponse(res, 201, true, "User registered", result.user);
-    return res.redirect("/auth/login");
-
-  } catch (err) {
-    console.error("Register Controller Error:", err);
-    // return sendResponse(res, 500, false, "Internal server error");
-    return res.render("auth/register", { message: "Server error" });
-  }
-};
-
+import ROLES from "../constants/roles.js";
 
 export const login = async (req, res) => {
   try {
@@ -56,14 +20,30 @@ export const login = async (req, res) => {
       return res.render("auth/login", { message: result.message });
     }
 
-    // SUCCESS → return token + user to check validation
-    // return sendResponse(res, 200, true, "Login successful", {
-    //   user: result.user,
-    //   token: result.token,
-    // });
 
-    req.session.toast = "Login successful";
-    return res.redirect("/dashboard");
+   if (result.success) {
+     req.session.user = {
+        id: result.user.id,
+        role: result.user.role,
+        name: result.user.name
+    };
+
+    // ROLE BASED REDIRECTS
+    if (result.user.role === ROLES.ADMIN) {
+      return res.redirect("/admin/dashboard");
+    }
+
+    if (result.user.role === ROLES.TEACHER) {
+      return res.redirect("/teacher/dashboard");
+    }
+
+    if (result.user.role === ROLES.STUDENT) {
+      return res.redirect("/student/dashboard");
+    }
+
+    return res.redirect("/"); // fallback
+}
+
 
   } catch (err) {
     console.error("Login Controller Error:", err);

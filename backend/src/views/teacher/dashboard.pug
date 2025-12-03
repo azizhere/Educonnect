@@ -1,0 +1,28 @@
+extends ../layouts/main
+
+block content
+  .container.mt-4
+    h2 Teacher Dashboard
+
+    .row.mt-4
+      .col-md-4
+        .card.shadow-sm
+          .card-body
+            h4 Assigned Courses
+            ul
+              each course in courses
+                li #{course.title}
+
+      .col-md-4
+        .card.shadow-sm
+          .card-body
+            h4 Pending Submissions
+            p.display-6 #{pending}
+
+      .col-md-4
+        .card.shadow-sm
+          .card-body
+            h4 Timetable
+            ul
+              each t in timetable
+                li #{t.day} - #{t.start_time} to #{t.end_time}

@@ -1,0 +1,23 @@
+extends ../layouts/main
+
+block content
+  .container.mt-4(style="max-width:500px")
+    h2 Add Teacher
+
+    if error
+      div.alert.alert-danger= error
+
+    form(action="/admin/teachers/add" method="POST")
+      .mb-3
+        label.form-label Name
+        input.form-control(type="text" name="name" required)
+
+      .mb-3
+        label.form-label Email
+        input.form-control(type="email" name="email" required)
+
+      .mb-3
+        label.form-label Password
+        input.form-control(type="password" name="password" required minlength="6")
+
+      button.btn.btn-success(type="submit") Add Teacher

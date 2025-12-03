@@ -1,0 +1,18 @@
+extends ../layouts/main
+
+block content
+  .container.mt-4
+    h2 My Courses
+    table.table.table-bordered.mt-3
+      thead
+        tr
+          th Title
+          th Description
+          th Action
+      tbody
+        each c in courses
+          tr
+            td= c.title
+            td= c.description
+            td
+              a.btn.btn-primary.btn-sm(href=`/teacher/courses/${c.id}/materials/upload`) Upload Material

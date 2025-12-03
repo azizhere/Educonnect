@@ -6,17 +6,24 @@ import {
   deleteCourseController,
   coursesPage
 } from "../controllers/course.controller.js";
+import { authorizeRoles } from "../middleware/auth.middleware.js";
+import ROLES from "../constants/roles.js";
 
 const router = Router();
 
-// ---------------- UI PAGE ROUTE ----------------
-router.get("/", coursesPage);
+router.get("/", authorizeRoles(ROLES.ADMIN, ROLES.TEACHER, ROLES.STUDENT), coursesPage);
 
-// ---------------- API ROUTES -------------------
-router.get("/api", getCourses);          // list
-router.post("/api", addCourse);          // create
-router.put("/api/:id", updateCourseController);  // update
-router.delete("/api/:id", deleteCourseController); // delete
+// API ROUTES
+// View
+router.get("/api", authorizeRoles(ROLES.ADMIN, ROLES.TEACHER, ROLES.STUDENT), getCourses);
 
+// Create
+router.post("/api", authorizeRoles(ROLES.ADMIN, ROLES.TEACHER), addCourse);
+
+// Update
+router.put("/api/:id", authorizeRoles(ROLES.ADMIN, ROLES.TEACHER), updateCourseController);
+
+// Delete (Admin only)
+router.delete("/api/:id", authorizeRoles(ROLES.ADMIN), deleteCourseController);
 
 export default router;

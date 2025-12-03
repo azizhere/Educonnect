@@ -1,0 +1,30 @@
+extends ../layouts/main
+
+block content
+  .container.mt-4
+    h2 Manage Courses
+
+    a.btn.btn-primary.mb-3(href="/admin/courses/add") Add New Course
+
+    if courses.length
+      table.table.table-bordered.table-striped
+        thead
+          tr
+            th #
+            th Title
+            th Description
+            th Assigned Teacher
+            th Created At
+            th Action
+        tbody
+          each course,i in courses
+            tr
+              td #{i+1}
+              td= course.title
+              td= course.description
+              td= course.teacher ? course.teacher.name : "No Teacher"
+              td= course.createdAt.toLocaleDateString()
+              td
+                a.btn.btn-sm.btn-warning(href=`/admin/courses/assign/${course.id}`) Assign
+    else
+      p.mt-3 No courses found.

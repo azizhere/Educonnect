@@ -8,10 +8,14 @@ nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
     #navbarNav.collapse.navbar-collapse
       ul.navbar-nav.ms-auto
         li.nav-item
-          a.nav-link(href="/dashboard") Dashboard
-        li.nav-item
-          a.nav-link(href="/courses") Courses
-        li.nav-item
-          a.nav-link(href="/assignments") Assignments
-        li.nav-item
-          a.nav-link(href="/logout") Logout
+          a.nav-link(href="/admin/dashboard") Admin panel
+        if user && user.role === 'ADMIN'
+          li.nav-item
+            a.nav-link(href="/admin/students") Students
+
+        //- li.nav-item
+        //-   a.nav-link(href="/courses") Courses
+        //- li.nav-item
+        //-   a.nav-link(href="/assignments") Assignments
+        //- li.nav-item
+        //-   a.nav-link(href="/logout") Logout

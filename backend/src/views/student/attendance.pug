@@ -1,0 +1,16 @@
+extends ../layouts/student_layout
+
+block content
+  h2 Attendance Record
+
+  table
+    thead
+      tr
+        th Date
+        th Status
+    tbody
+      each a in attendance
+        tr
+          td= a.date.toDateString()
+          td= a.status
+                

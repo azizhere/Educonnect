@@ -8,7 +8,8 @@ export const createClassTeacherTable = async () => {
       class_id VARCHAR(36),
       teacher_id VARCHAR(36),
       FOREIGN KEY (class_id) REFERENCES classes(id),
-      FOREIGN KEY (teacher_id) REFERENCES users(id)
+      FOREIGN KEY (teacher_id) REFERENCES users(id),
+      UNIQUE (class_id, teacher_id)
     );
   `;
   await pool.execute(query);

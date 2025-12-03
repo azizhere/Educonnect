@@ -1,0 +1,67 @@
+//- extends ../layout
+
+//- block content
+//-   h1 Student Dashboard
+
+//-   h2 Enrolled Courses
+//-   ul
+//-     each course in courses
+//-       li #{course.title}
+
+//-   h2 Pending Assignments
+//-   ul
+//-     each a in assignments
+//-       li #{a.title} (Due: #{a.due_date})
+
+//-   h2 Recent Grades
+//-   ul
+//-     each g in grades
+//-       li #{g.assignment} - #{g.grade} (#{g.course})
+
+//-   h2 Attendance
+//-   p Present: #{attendance.present} / #{attendance.total_classes}
+
+//-   h2 Timetable
+//-   ul
+//-     each t in timetable
+//-       li #{t.day} - #{t.subject} (#{t.time})
+
+extends ../layouts/main
+
+block content
+  h1 Student Dashboard
+
+  h2 Enrolled Courses
+  if courses.length > 0
+    ul
+      each course in courses
+        li #{course.title} - #{course.description}
+  else
+    p No courses enrolled yet.
+
+  h2 Pending Assignments
+  if assignments.length > 0
+    ul
+      each a in assignments
+        li #{a.title} (Due: #{a.due_date}) - Course: #{a.course}
+  else
+    p No pending assignments.
+
+  h2 Recent Grades
+  if grades.length > 0
+    ul
+      each g in grades
+        li #{g.assignment} - #{g.grade} (#{g.course}) - Feedback: #{g.feedback || 'N/A'}
+  else
+    p No grades available yet.
+
+  h2 Attendance
+  p Present: #{attendance[0].present || 0} / #{attendance[0].total_classes || 0}
+
+  h2 Timetable
+  if timetable.length > 0
+    ul
+      each t in timetable
+        li #{t.day} - #{t.start_time} to #{t.end_time} | Subject: #{t.subject || 'N/A'} | Room: #{t.room || 'N/A'}
+  else
+    p Timetable not available yet.

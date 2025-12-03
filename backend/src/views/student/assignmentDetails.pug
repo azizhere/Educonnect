@@ -1,0 +1,27 @@
+extends ../layouts/main
+
+block content
+  h1 #{assignment.title}
+  p Course: #{assignment.course_title}
+  p Due Date: #{assignment.due_date}
+  hr
+
+  if submission
+    h3 Your Submission
+    p Submitted At: #{submission.submitted_at}
+    a(href=submission.file_url, target="_blank") Download File
+
+    if submission.grade
+      hr
+      h3 Grade
+      p Marks: #{submission.grade}
+      p Feedback: #{submission.feedback}
+    else
+      p Status: Submitted (Waiting for grading)
+
+  else
+    h3 Submit Assignment
+    form(method="POST" action=`/student/assignment/${assignment.id}/submit` enctype="multipart/form-data")
+      input(type="file" name="file" required)
+      br
+      button.btn.btn-primary(type="submit") Upload

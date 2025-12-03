@@ -1,0 +1,30 @@
+extends ../layout
+
+block content
+  h1 #{course.title}
+  p #{course.description}
+
+  hr
+
+  h2 Materials
+  if materials.length === 0
+    p No materials uploaded yet.
+  else
+    ul
+      each m in materials
+        li
+          strong #{m.title}
+          |  - 
+          a(href=m.file_url, target="_blank") Download
+
+  hr
+
+  h2 Assignments
+  if assignments.length === 0
+    p No assignments posted yet.
+  else
+    ul
+      each a in assignments
+        li
+          a(href=`/student/assignment/${a.id}`) #{a.title}
+          |  (Due: #{a.due_date})

@@ -11,7 +11,8 @@ const createCourseTable = async () => {
   description TEXT,
   instructor VARCHAR(36),
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (instructor) REFERENCES users(id)
+  FOREIGN KEY (instructor) REFERENCES users(id),
+  UNIQUE(fid)
 );
   `;
   await pool.execute(query);
@@ -23,7 +24,7 @@ createCourseTable();
 export const createCourse = async ({ title, description, instructor }) => {
   const id = uuidv4();
   const [result] = await pool.execute(
-    `INSERT INTO courses (id, fid, title, description, instructor)
+    `INSERT INTO courses (id, title, description, instructor)
      VALUES (?, ?, ?, ?)`,
     [id, title, description, instructor]
   );
@@ -33,6 +34,7 @@ export const createCourse = async ({ title, description, instructor }) => {
 export const getAllCourses = async () => {
   const [rows] = await pool.execute(`SELECT 
       c.fid,
+      c.id,
       c.title,
       c.description,
       c.created_at,

@@ -1,0 +1,27 @@
+extends ../layouts/main
+
+block content
+  .container.mt-4(style="max-width:600px")
+    h2 Add Course
+
+    if error
+      div.alert.alert-danger= error
+
+    form(action="/admin/courses/add" method="POST")
+
+      .mb-3
+        label.form-label Course Title
+        input.form-control(type="text" name="title" required)
+
+      .mb-3
+        label.form-label Description
+        textarea.form-control(name="description")
+
+      .mb-3
+        label.form-label Assign Teacher
+        select.form-select(name="teacher" required)
+          option(value="" disabled selected) Select Teacher
+          each t in teachers
+            option(value=t.id) #{t.name} (#{t.email})
+
+      button.btn.btn-success(type="submit") Create Course

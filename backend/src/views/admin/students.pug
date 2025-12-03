@@ -1,0 +1,27 @@
+extends ../layouts/main
+
+block content
+  .container.mt-4
+    h2 Manage Students
+
+    a.btn.btn-primary.mb-3(href="/admin/students/add") Add New Student
+
+    if students.length
+      table.table.table-bordered.table-striped
+        thead
+          tr
+            th #
+            th Name
+            th Email
+            th Actions
+        tbody
+          each s,i in students
+            tr
+              td #{i+1}
+              td= s.name
+              td= s.email
+              td
+                button.btn.btn-sm.btn-warning Edit
+                button.btn.btn-sm.btn-danger Delete
+    else
+      p.mt-3 No students found.
