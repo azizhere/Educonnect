@@ -1,6 +1,9 @@
 import bcrypt from "bcrypt";
 import {
   createUser,
+  teacherCount,
+  studentCount,
+  courseCount,
   // findUserByEmail,
   // getUsersByRole
 } from "../models/User.model.js";
@@ -9,14 +12,32 @@ import {
   createCourse,
   getAllCourses,
   updateCourse,
+  findUserByEmail,
+  getUsersByRole,
   deleteCourse
 } from "../models/Course.model.js";
 
 import ROLES from "../constants/roles.js";
 
 // Dashboard
-export const adminDashboard = (req, res) => {
-  res.render("admin/dashboard", { title: "Admin Dashboard" });
+export const adminDashboard = async (req, res) => {
+  try {
+    const numberOfTeacher = await teacherCount();
+    const numberOfStudent = await studentCount();
+    const numberOfCourses = await courseCount();
+
+  return res.render("admin/dashboard", { title: "Admin Dashboard",
+     counts: {
+        teachers: numberOfTeacher,
+        students: numberOfStudent,
+        courses: numberOfCourses
+      },
+      user: req.user
+  });
+}catch (error) {
+    console.error("Dashboard Error:", error);
+    return res.status(500).send("Something went wrong");
+  }
 };
 
 /* ---------------------- TEACHERS ---------------------- */
@@ -24,7 +45,7 @@ export const adminDashboard = (req, res) => {
 // Teachers List
 export const adminTeachersPage = async (req, res) => {
   const teachers = await getUsersByRole(ROLES.TEACHER);
-  res.render("admin/teachers", { title: "Manage Teachers", teachers });
+  res.render("admin/teacher", { title: "Manage Teachers", teachers });
 };
 
 // Add Teacher Page

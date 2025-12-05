@@ -21,7 +21,7 @@ block content
               td= t.name
               td= t.email
               td
-                button.btn.btn-sm.btn-warning Edit
-                button.btn.btn-sm.btn-danger Delete
+                button.btn.btn-sm.btn-warning(href=`/admin/teachers/edit/${t.id}`) Edit
+                button.btn.btn-sm.btn-danger(href=`/admin/teachers/delete/${t.id}`) Delete
     else
       p.mt-3 No teachers found.

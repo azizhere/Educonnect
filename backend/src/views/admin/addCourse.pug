@@ -22,6 +22,7 @@ block content
         select.form-select(name="teacher" required)
           option(value="" disabled selected) Select Teacher
           each t in teachers
-            option(value=t.id) #{t.name} (#{t.email})
+            //- option(value=t.id) #{t.name} (#{t.email})
+            option(value=t.id)= `${t.name} (${t.email})`
 
       button.btn.btn-success(type="submit") Create Course

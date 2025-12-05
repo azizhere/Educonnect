@@ -22,9 +22,17 @@ block content
               td #{i+1}
               td= course.title
               td= course.description
-              td= course.teacher ? course.teacher.name : "No Teacher"
-              td= course.createdAt.toLocaleDateString()
+              td
+                if course.teacher_name
+                  | #{course.teacher_name} (#{course.teacher_email})
+                else
+                  | No Teacher
+
+              td= new Date(course.created_at).toLocaleDateString()
+              //- td= course.teacher ? course.teacher.name : "No Teacher"
+              //- td= course.createdAt.toLocaleDateString()
               td
                 a.btn.btn-sm.btn-warning(href=`/admin/courses/assign/${course.id}`) Assign
     else
       p.mt-3 No courses found.
+

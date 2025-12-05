@@ -52,3 +52,41 @@ export const findByEmail = async (email) => {
 
   return rows[0];
 };
+export const getUsersByRole = async (role) => {
+  const [rows] = await pool.execute("SELECT * FROM users WHERE role = ?", [role]);
+  return rows;
+};
+
+
+export const teacherCount = async(role) =>
+{
+  const [teacherCountResult] = await pool.execute(
+      `SELECT COUNT(*) AS count FROM users WHERE role = 'teacher'`
+    );
+    const teacherCount = teacherCountResult[0].count;
+    return teacherCount;
+}
+
+    
+
+    // Count students
+  export const studentCount = async() =>
+{
+    const [studentCountResult] = await pool.execute(
+      `SELECT COUNT(*) AS count FROM users WHERE role = 'student'`
+    );
+    const studentCount = studentCountResult[0].count;
+    return studentCount;
+  }
+
+  export const courseCount = async() =>
+{
+  // Count courses
+  const [courseCountResult] = await pool.execute(
+    `SELECT COUNT(*) AS count FROM courses`
+  );
+  const courseCount = courseCountResult[0].count;
+  return courseCount;
+   
+  }
+

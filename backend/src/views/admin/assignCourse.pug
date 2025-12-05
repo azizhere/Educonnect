@@ -14,7 +14,12 @@ block content
         label.form-label Select Teacher
         select.form-select(name="teacher" required)
           each t in teachers
-            option(value=t.id selected=(t.id === course.instructor)) 
-              | #{t.name} (#{t.email})
+            ption(
+              value=t.id
+              selected=(course.instructor == t.id)
+            ) #{t.name} (#{t.email})
+
+            //- option(value=t.id selected=(t.id === course.instructor)) 
+            //-   | #{t.name} (#{t.email})
 
       button.btn.btn-primary(type="submit") Assign

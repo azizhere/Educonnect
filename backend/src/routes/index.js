@@ -1,4 +1,8 @@
+import dotenv from 'dotenv';
+dotenv.config(); // Must be at the top
+import { verifyJWT } from "../middleware/auth.middleware.js";
 import { Router } from "express";
+import cookieParser from "cookie-parser";
 import adminRoutes from "./admin.routes.js";
 import teacherRoutes from "./teacher.routes.js";
 import studentRoutes from "./student.routes.js";
@@ -23,9 +27,9 @@ router.get("/", (req, res) => {
 // Use routes
 
 router.use("/auth", authRoutes);
-router.use("/admin", adminRoutes);
-router.use("/teacher", teacherRoutes);
-router.use("/student", studentRoutes);
+router.use("/admin",verifyJWT, adminRoutes);
+router.use("/teacher",verifyJWT, teacherRoutes);
+router.use("/student",verifyJWT, studentRoutes);
 router.use("/courses", courseRoutes);
 // router.use("/assignments", assignmentRoutes);
 export default router;

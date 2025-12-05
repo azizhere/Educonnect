@@ -60,3 +60,17 @@ export const deleteCourse = async (id) => {
   await pool.execute(`DELETE FROM courses WHERE id=?`, [id]);
   return true;
 };
+
+
+// ✅ Find By Email
+export const findUserByEmail = async (email) => {
+  const query = "SELECT * FROM users WHERE email = ?";
+
+  const [rows] = await pool.execute(query, [email]);
+
+  return rows[0];
+};
+export const getUsersByRole = async (role) => {
+  const [rows] = await pool.execute("SELECT * FROM users WHERE role = ?", [role]);
+  return rows;
+};

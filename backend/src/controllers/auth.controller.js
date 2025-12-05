@@ -1,3 +1,4 @@
+import jwt from "jsonwebtoken";
 import authService from "../services/auth.service.js";
 import { sendResponse } from "../utils/response.js";
 import ROLES from "../constants/roles.js";
@@ -27,6 +28,16 @@ export const login = async (req, res) => {
         role: result.user.role,
         name: result.user.name
     };
+     // --- JWT creation ---
+    const token = jwt.sign(
+      { id: result.user.id, role: result.user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+
+        // You can store JWT in cookie (optional)
+    res.cookie("jwt", token, { httpOnly: true, maxAge: 3600000 });
+
 
     // ROLE BASED REDIRECTS
     if (result.user.role === ROLES.ADMIN) {
@@ -51,3 +62,12 @@ export const login = async (req, res) => {
   }
 };
 
+export const logout = (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      console.error("Logout error:", err);
+    }
+    res.clearCookie("connect.sid"); // or your session cookie
+    res.redirect("/auth/login");
+  });
+};
