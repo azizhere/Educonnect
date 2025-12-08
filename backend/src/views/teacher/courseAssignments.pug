@@ -1,0 +1,9 @@
+extends ../layouts/main.pug
+
+block content
+  h2 Assignments for #{course_title}
+  
+  ul
+    each assignment in assignments
+      li
+        a(href=`/teacher/assignments/${assignment.id}/submissions`) #{assignment.title} - Due: #{assignment.due_date}

@@ -1,0 +1,26 @@
+extends ../layouts/main
+
+block content
+  .container.mt-4
+    h2 Create Assignment
+
+    form(method="POST" enctype="multipart/form-data" action="/teacher/assignment/create")
+      input(type="hidden" name="course_id" value=course_id)
+
+      .mb-3
+        label Title
+        input.form-control(type="text" name="title" required)
+
+      .mb-3
+        label Description
+        textarea.form-control(name="description" required)
+
+      .mb-3
+        label Due Date
+        input.form-control(type="date" name="due_date" required)
+
+      .mb-3
+        label Attach File
+        input.form-control(type="file" name="attachment")
+
+      button.btn.btn-success(type="submit") Create

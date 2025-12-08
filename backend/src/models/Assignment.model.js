@@ -9,7 +9,7 @@ export const createAssignmentsTable = async () => {
       title VARCHAR(150),
       description TEXT,
       due_date DATE NOT NULL,
-      attachment_url TEXT,
+      attachment_url VARCHAR(255),
       created_by VARCHAR(36),
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (course_id) REFERENCES courses(id),

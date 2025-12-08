@@ -1,24 +1,56 @@
+//- extends ../layouts/main
+
+//- block content
+//-   h1 Submission: #{submission.assignment_title}
+//-   h3 Student: #{submission.student_name}
+
+//-   hr
+
+//-   a.btn.btn-success(href=submission.file_url, target="_blank") Download File
+
+//-   hr
+
+//-   h3 Grade Student
+
+//-   form(method="POST" action=`/teacher/submission/${submission.id}/grade`)
+//-     .mb-3
+//-       label Grade (Number)
+//-       input.form-control(type="text" name="grade" required value=submission.grade)
+
+//-     .mb-3
+//-       label Feedback
+//-       textarea.form-control(name="feedback") #{submission.feedback}
+
+//-     button.btn.btn-primary(type="submit") Save Grade
+
+
+
+
+
 extends ../layouts/main
 
 block content
-  h1 Submission: #{submission.assignment_title}
-  h3 Student: #{submission.student_name}
+  .container.mt-4
+    h2 Submission Details
 
-  hr
+    h4 Assignment: #{submission.assignment_title}
+    h4 Student: #{submission.student_name}
 
-  a.btn.btn-success(href=submission.file_url, target="_blank") Download File
+    hr
 
-  hr
+    a.btn.btn-success(href=submission.file_url target="_blank") Download File
 
-  h3 Grade Student
+    hr
 
-  form(method="POST" action=`/teacher/submission/${submission.id}/grade`)
-    .mb-3
-      label Grade (Number)
-      input.form-control(type="text" name="grade" required value=submission.grade)
+    h3 Grade Student
 
-    .mb-3
-      label Feedback
-      textarea.form-control(name="feedback") #{submission.feedback}
+    form(method="POST" action=`/teacher/submissions/${submission.id}/grade`)
+      .mb-3
+        label Grade
+        input.form-control(type="number" name="grade" required value=submission.grade)
 
-    button.btn.btn-primary(type="submit") Save Grade
+      .mb-3
+        label Feedback
+        textarea.form-control(name="feedback") #{submission.feedback}
+
+      button.btn.btn-primary(type="submit") Save Grade

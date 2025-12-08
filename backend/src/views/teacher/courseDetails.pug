@@ -1,0 +1,13 @@
+extends ../layouts/main
+
+block content
+  .container.mt-4
+    h2 #{course.title}
+
+    p #{course.description}
+
+    hr
+
+    a.btn.btn-primary(href=`/teacher/courses/${course.id}/materials/upload`) Upload Material
+    a.btn.btn-success.ms-2(href=`/teacher/attendance/${course.id}`) Attendance
+    a.btn.btn-warning.ms-2(href=`/teacher/assignment/create?course=${course.id}`) Create Assignment

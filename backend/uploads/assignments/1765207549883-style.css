@@ -1,0 +1,58 @@
+*
+{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.header{
+    background-color: beige;
+    height: 5vh;
+}
+.navbarcontainer
+{
+    display: flex;
+}
+
+.navbar{
+    display: flex;
+    justify-content:space-between;
+    justify-items: center;
+    width:100%;
+    background-color: gray;
+    
+}
+.navbardiv
+{
+    display: flex;
+    width: 30%;
+    background-color: aquamarine;
+    justify-content: start;
+    justify-items: start;
+    height:50px;
+
+
+}
+
+#image
+{
+    height: 100%;
+    object-fit:contain;
+
+}
+#imagecontainer
+{
+    display: flex;
+    align-self: flex-start;
+}
+
+.unorderlist
+{
+    display: flex;
+    justify-content: center;
+    justify-items: center;
+    align-items: center;
+    align-content:center ;
+    list-style: none;
+    gap: 10px;
+
+}

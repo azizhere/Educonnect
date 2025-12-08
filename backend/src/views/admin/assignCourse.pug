@@ -14,7 +14,7 @@ block content
         label.form-label Select Teacher
         select.form-select(name="teacher" required)
           each t in teachers
-            ption(
+            option(
               value=t.id
               selected=(course.instructor == t.id)
             ) #{t.name} (#{t.email})

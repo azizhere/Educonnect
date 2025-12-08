@@ -1,0 +1,17 @@
+extends ../layouts/main.pug
+
+block content
+  h2 Grade Submission
+
+  p Student: #{submission.student_name}
+  p Submitted At: #{submission.submitted_at}
+  p Assignment: #{submission.assignment_title}
+
+  form(action=`/teacher/submissions/grade/${submission.id}` method="POST")
+    label Grade:
+    input(type="number" name="grade" min="0" max="100" required)
+    
+    label Feedback:
+    textarea(name="feedback")
+    
+    button(type="submit") Submit

@@ -4,7 +4,10 @@ import {
   getAssignmentsByCourse,
   getAssignmentWithCourse,
 } from "../models/Assignment.model.js";
-import { getSubmissionsByAssignment, getSingleSubmission } from "../models/submission.model.js";
+import {
+  getSubmissionsByAssignment,
+  getSingleSubmission,
+} from "../models/submission.model.js";
 import { updateGradeSubmission } from "../models/submission.model.js";
 import {
   getStudentsByCourse,
@@ -42,14 +45,57 @@ export const addAssignment = async (req, res) => {
   }
 };
 
+// export const getCourseAssignments = async (req, res) => {
+//   try {
+//     const { course_id } = req.params;
+//     const [assignments] = await pool.execute(
+//       "SELECT * FROM assignments WHERE course_id = ?",
+//       [course_id]
+//     );
+
+//     const [course] = await pool.execute(
+//       "SELECT title FROM courses WHERE id = ?",
+//       [course_id]
+//     );
+
+//     res.render("teacher/courseAssignments", {
+//       title: `Assignments for ${course[0].title}`,
+//       assignments,
+//       course_title: course[0].title,
+//     });
+//   } catch (err) {
+//     res.send("Error loading assignments");
+//   }
+// };
+
+
 export const getCourseAssignments = async (req, res) => {
   try {
     const { course_id } = req.params;
-    const assignments = await getAssignmentsByCourse(course_id);
+    console.log("Course ID:", course_id);
 
-    res.json({ success: true, assignments });
+    const [assignments] = await pool.execute(
+      "SELECT * FROM assignments WHERE course_id = ?",
+      [course_id]
+    );
+    console.log("Assignments:", assignments);
+
+    const [course] = await pool.execute(
+      "SELECT title FROM courses WHERE id = ?",
+      [course_id]
+    );
+    console.log("Course:", course);
+
+    if (!course.length) return res.send("Course not found");
+
+    res.render("teacher/courseAssignments", {
+      title: `Assignments for ${course[0].title}`,
+      assignments,
+      course_title: course[0].title,
+    });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    console.error("Error in getCourseAssignments:", err);
+    res.send("Error loading assignments");
   }
 };
 
@@ -145,20 +191,44 @@ export const uploadMaterialAction = async (req, res) => {
     res.send("Upload failed");
   }
 };
+export const viewCourseSubmissions = async (req, res) => {
+  const { course_id } = req.params;
+
+  // Fetch all assignments for this course
+  const [assignments] = await pool.execute(
+    "SELECT * FROM assignments WHERE course_id = ?",
+    [course_id]
+  );
+
+  if (!assignments.length) return res.send("No assignments for this course");
+
+  // You can either flatten all submissions or handle assignment-wise
+  let submissions = [];
+  for (let a of assignments) {
+    const s = await getSubmissionsByAssignment(a.id);
+    s.forEach(sub => (sub.assignment_title = a.title));
+    submissions.push(...s);
+  }
+
+  res.render("submissionList", { submissions, assignments });
+};
+
 
 export const viewSubmissions = async (req, res) => {
-  try {
-    const { assignment_id } = req.params;
+  const { assignment_id } = req.params;
 
-    const submissions = await getSubmissionsByAssignment(assignment_id);
+  const [assignment] = await pool.execute(
+    "SELECT title FROM assignments WHERE id = ?",
+    [assignment_id]
+  );
 
-    res.json({
-      success: true,
-      submissions,
-    });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
+  const submissions = await getSubmissionsByAssignment(assignment_id);
+
+  res.render("teacher/submissionsList", {
+    title: `Submissions for ${assignment[0].title}`,
+    assignment: assignment[0],
+    submissions,
+  });
 };
 
 export const gradeStudentSubmission = async (req, res) => {
@@ -250,6 +320,67 @@ export const teacherTimetablePage = async (req, res) => {
     timetable,
   });
 };
+export const viewGradePage = async (req, res) => {
+  const submissionId = req.params.id;
+  const submission = await getSingleSubmission(submissionId);
+
+  res.render("teacher/gradeSubmission", {
+    title: "Grade Submission",
+    submission: submission[0],
+  });
+};
+// List all submissions of all assignments created by the logged-in teacher
+export const allSubmissions = async (req, res) => {
+  try {
+    const teacherId = req.user.id;
+
+    const [submissions] = await pool.execute(
+      `SELECT s.id AS submission_id, s.grade, s.feedback, s.submitted_at AS submitted_at,
+          a.title AS assignment_title, c.title AS course_title, u.name AS student_name
+   FROM submissions s
+   JOIN assignments a ON s.assignment_id = a.id
+   JOIN courses c ON a.course_id = c.id
+   JOIN users u ON s.student_id = u.id
+   WHERE a.created_by = ?
+   ORDER BY s.submitted_at DESC`,
+      [teacherId]
+    );
+
+    res.render("teacher/allSubmissions", {
+      title: "All Submissions",
+      submissions,
+    });
+  } catch (err) {
+    console.log(err);
+    res.send("Error loading submissions");
+  }
+};
+// List all pending submissions for assignments created by the logged-in teacher
+export const pendingSubmissions = async (req, res) => {
+  try {
+    const teacherId = req.user.id;
+
+    const [submissions] = await pool.execute(
+      `SELECT s.id AS submission_id, s.grade, s.feedback, s.submitted_at AS submitted_at,
+              a.title AS assignment_title, c.title AS course_title, u.name AS student_name
+       FROM submissions s
+       JOIN assignments a ON s.assignment_id = a.id
+       JOIN courses c ON a.course_id = c.id
+       JOIN users u ON s.student_id = u.id
+       WHERE a.created_by = ? AND s.grade IS NULL
+       ORDER BY s.submitted_at DESC`,
+      [teacherId]
+    );
+
+    res.render("teacher/pendingSubmissions", {
+      title: "Pending Submissions",
+      submissions,
+    });
+  } catch (err) {
+    console.log(err);
+    res.send("Error loading pending submissions");
+  }
+};
 
 // controllers/teacher.controller.js
 export const viewAssignmentSubmissions = async (req, res) => {
@@ -273,7 +404,6 @@ export const viewAssignmentSubmissions = async (req, res) => {
   }
 };
 
-
 export const viewSingleSubmission = async (req, res) => {
   const submissionId = req.params.id;
 
@@ -291,4 +421,36 @@ export const viewSingleSubmission = async (req, res) => {
     console.log(err);
     res.send("Error loading submission");
   }
+};
+
+// List all assignments created by the logged-in teacher
+export const teacherAssignments = async (req, res) => {
+  try {
+    const teacherId = req.user.id;
+
+    const [assignments] = await pool.execute(
+      `SELECT a.id, a.title, a.due_date, c.title AS course_name
+       FROM assignments a
+       JOIN courses c ON a.course_id = c.id
+       WHERE a.created_by = ?`,
+      [teacherId]
+    );
+
+    res.render("teacher/assignments", {
+      title: "My Assignments",
+      assignments,
+    });
+  } catch (err) {
+    console.log(err);
+    res.send("Error loading assignments");
+  }
+};
+
+export const createAssignmentPage = async (req, res) => {
+  const { course_id } = req.query; // pass course_id in query
+  res.render("teacher/createAssignment", {
+    course_id,
+    title: "Create Assignment",
+  });
+  if (!course_id) return res.send("Course ID missing");
 };

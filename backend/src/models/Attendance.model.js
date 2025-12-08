@@ -39,16 +39,42 @@ export const markAttendance = async ({ student_id, course_id, date, status }) =>
 };
 
 // Get students of course (joined from ClassStudents table)
-export const getStudentsByCourse = async (course_id) => {
-  const [rows] = await pool.execute(`
-    SELECT u.id, u.name, u.email
-    FROM class_students cs
-    JOIN users u ON cs.student_id = u.id
-    WHERE cs.course_id = ?
-  `, [course_id]);
+// export const getStudentsByCourse = async (course_id) => {
+//   const [rows] = await pool.execute(`
+//     SELECT u.id, u.name, u.email
+//     FROM class_students cs
+//     JOIN users u ON cs.student_id = u.id
+//     WHERE cs.course_id = ?
+//   `, [course_id]);
+
+//   return rows;
+// };
+
+export const getStudentsByCourse = async (class_id) => {
+  const [rows] = await pool.execute(
+    `SELECT u.id, u.name, u.email
+     FROM users u
+     JOIN class_students cs ON u.id = cs.student_id
+     WHERE cs.class_id = ?`,
+    [class_id]
+  );
 
   return rows;
 };
+
+
+
+// export const getStudentsByCourse = async (course_id) => {
+//   const [rows] = await pool.execute(
+//     `SELECT u.id, u.name, u.email, cs.status
+//      FROM users u
+//      LEFT JOIN course_students cs ON u.id = cs.student_id AND cs.course_id = ?
+//      WHERE u.role = 'student'`,
+//     [course_id]
+//   );
+
+//   return rows;
+// };
 
 // View attendance history
 export const getAttendanceByCourse = async (course_id) => {

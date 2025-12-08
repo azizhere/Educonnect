@@ -62,12 +62,33 @@ export const login = async (req, res) => {
   }
 };
 
+// export const logout = (req, res) => {
+//   req.session.destroy((err) => {
+//     if (err) {
+//       console.error("Logout error:", err);
+//     }
+//     res.clearCookie("connect.sid"); // or your session cookie
+//     res.redirect("/auth/login");
+//   });
+// };
+
 export const logout = (req, res) => {
+  // Destroy session
   req.session.destroy((err) => {
     if (err) {
       console.error("Logout error:", err);
     }
-    res.clearCookie("connect.sid"); // or your session cookie
-    res.redirect("/auth/login");
+
+    // Clear ALL cookies
+    res.clearCookie("connect.sid", { path: "/" });
+    res.clearCookie("jwt", { path: "/" });
+
+    // Prevent back button returning cached page
+    res.set("Cache-Control", "no-cache, no-store, must-revalidate");
+    res.set("Pragma", "no-cache");
+    res.set("Expires", "0");
+
+    return res.redirect("/auth/login");
   });
 };
+

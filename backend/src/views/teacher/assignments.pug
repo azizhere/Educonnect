@@ -1,0 +1,19 @@
+extends ../layouts/main.pug
+
+block content
+  h1= title
+  if assignments.length
+    table.table
+      thead
+        tr
+          th Title
+          th Course
+          th Due Date
+      tbody
+        each assignment in assignments
+          tr
+            td #{assignment.title}
+            td #{assignment.course_name}
+            td #{assignment.due_date.toISOString().split('T')[0]}
+  else
+    p No assignments found.

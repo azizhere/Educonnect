@@ -27,12 +27,15 @@ block content
                   | #{course.teacher_name} (#{course.teacher_email})
                 else
                   | No Teacher
+                  
 
               td= new Date(course.created_at).toLocaleDateString()
               //- td= course.teacher ? course.teacher.name : "No Teacher"
               //- td= course.createdAt.toLocaleDateString()
               td
-                a.btn.btn-sm.btn-warning(href=`/admin/courses/assign/${course.id}`) Assign
+                a.btn.btn-sm.btn-info.mr-1(href=`/admin/courses/edit/${course.id}`) Edit
+                form.d-inline(action=`/admin/courses/delete/${course.id}` method="POST")
+                  button.btn.btn-sm.btn-danger(type="submit" onclick="return confirm('Are you sure?')") Delete
     else
       p.mt-3 No courses found.
 

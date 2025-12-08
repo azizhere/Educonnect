@@ -1,0 +1,18 @@
+extends ../layouts/main.pug
+
+block content
+  h2 Submissions for #{assignment.title}
+  
+  table
+    tr
+      th Student
+      th Submitted At
+      th Grade
+      th Actions
+    each submission in submissions
+      tr
+        td #{submission.student_name}
+        td #{submission.submitted_at}
+        td #{submission.grade || 'Pending'}
+        td 
+          a(href=`/teacher/submission/${submission.id}`) View

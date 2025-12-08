@@ -1,20 +1,3 @@
-//- nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
-//-   .container
-//-     a.navbar-brand(href="/") EDUCONNECT
-
-//-     button.navbar-toggler(type="button", data-bs-toggle="collapse", data-bs-target="#navbarNav")
-//-       span.navbar-toggler-icon
-
-//-     #navbarNav.collapse.navbar-collapse
-//-       ul.navbar-nav.ms-auto
-//-         li.nav-item
-//-           a.nav-link(href="/admin/dashboard") Admin panel
-//-         if user && user.role === 'ADMIN'
-//-           li.nav-item
-//-             a.nav-link(href="/admin/students") Students
-
-
-
 nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
   .container
     a.navbar-brand(href="/") EDUCONNECT
@@ -28,7 +11,7 @@ nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
         // If not logged in
         if !user
           li.nav-item
-            a.nav-link(href="/login") Login
+            a.nav-link(href="/auth/login") Login
 
         // If logged in
         if user
@@ -52,9 +35,13 @@ nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
             li.nav-item
               a.nav-link(href="/teacher/dashboard") Dashboard
             li.nav-item
-              a.nav-link(href="/teacher/my-courses") My Courses
+              a.nav-link(href="/teacher/courses") My Courses
             li.nav-item
-              a.nav-link(href="/teacher/students") Students
+              a.nav-link(href="/teacher/assignments") Assignments
+            li.nav-item
+              a.nav-link(href="/teacher/submissions") Submissions
+            li.nav-item
+              a.nav-link(href="/teacher/timetable") Timetable
 
           // =======================
           // STUDENT NAVIGATION
@@ -71,4 +58,4 @@ nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
           // LOGOUT
           // =======================
           li.nav-item
-            a.nav-link(href="/logout") Logout
+            a.nav-link(href="/auth/logout") Logout

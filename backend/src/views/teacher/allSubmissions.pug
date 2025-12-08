@@ -1,0 +1,25 @@
+extends ../layouts/main.pug
+
+block content
+  h2 All Submissions
+  table.table
+    thead
+      tr
+        th Student
+        th Course
+        th Assignment
+        th Grade
+        th Feedback
+        th Submitted At
+        th Actions
+    tbody
+      each submission in submissions
+        tr
+          td= submission.student_name
+          td= submission.course_title
+          td= submission.assignment_title
+          td= submission.grade ? submission.grade : 'Pending'
+          td= submission.feedback ? submission.feedback : '-'
+          td= submission.submitted_at.toLocaleString()
+          td
+            a.btn.btn-sm.btn-primary(href=`/teacher/submission/${submission.submission_id}`) View

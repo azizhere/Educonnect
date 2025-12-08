@@ -1,0 +1,17 @@
+extends ../layouts/main
+
+block content
+  .container.mt-4
+    h2 Edit Teacher
+
+    form(method="POST")
+      .mb-3
+        label.form-label Name
+        input.form-control(type="text" name="name" required value=teacher.name)
+
+      .mb-3
+        label.form-label Email
+        input.form-control(type="email" name="email" required value=teacher.email)
+
+      button.btn.btn-primary(type="submit") Update Teacher
+      a.btn.btn-secondary(href="/admin/teachers") Cancel

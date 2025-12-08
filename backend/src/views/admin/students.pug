@@ -21,7 +21,7 @@ block content
               td= s.name
               td= s.email
               td
-                button.btn.btn-sm.btn-warning(href=`/admin/students/edit/${s.id}`) Edit
-                button.btn.btn-sm.btn-danger(href=`/admin/students/delete/${s.id}`) Delete
+                a.btn.btn-sm.btn-warning(href=`/admin/students/edit/${s.id}`) Edit
+                a.btn.btn-sm.btn-danger(href=`/admin/students/delete/${s.id}`) Delete
     else
       p.mt-3 No students found.

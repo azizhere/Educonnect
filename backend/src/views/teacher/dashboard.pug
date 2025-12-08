@@ -1,3 +1,32 @@
+//- extends ../layouts/main
+
+//- block content
+//-   .container.mt-4
+//-     h2 Teacher Dashboard
+
+//-     .row.mt-4
+//-       .col-md-4
+//-         .card.shadow-sm
+//-           .card-body
+//-             h4 Assigned Courses
+//-             a.btn.btn-sm.btn-primary(href="/teacher/my-courses") View All
+
+//-       .col-md-4
+//-         .card.shadow-sm
+//-           .card-body
+//-             h4 Pending Submissions
+//-             p.display-6 #{pending}
+
+//-       .col-md-4
+//-         .card.shadow-sm
+//-           .card-body
+//-             h4 Timetable
+//-             ul
+//-               each t in timetable
+//-                 li #{t.day} - #{t.start_time} to #{t.end_time}
+
+
+
 extends ../layouts/main
 
 block content
@@ -10,19 +39,21 @@ block content
           .card-body
             h4 Assigned Courses
             ul
-              each course in courses
-                li #{course.title}
+              each c in courses
+                li
+                  a(href=`/teacher/course/${c.id}`)= c.title
+            a.btn.btn-sm.btn-primary.mt-2(href="/teacher/courses") View All Courses
 
       .col-md-4
         .card.shadow-sm
           .card-body
             h4 Pending Submissions
             p.display-6 #{pending}
+            a.btn.btn-sm.btn-warning(href="/teacher/pending-submissions") View Pending
 
       .col-md-4
         .card.shadow-sm
           .card-body
             h4 Timetable
-            ul
-              each t in timetable
-                li #{t.day} - #{t.start_time} to #{t.end_time}
+            a.btn.btn-sm.btn-info(href="/teacher/timetable") View Timetable
+

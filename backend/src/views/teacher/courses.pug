@@ -3,12 +3,14 @@ extends ../layouts/main
 block content
   .container.mt-4
     h2 My Courses
+
     table.table.table-bordered.mt-3
       thead
         tr
           th Title
           th Description
-          th Action
+          th Actions
+
       tbody
         each c in courses
           tr
@@ -16,3 +18,6 @@ block content
             td= c.description
             td
               a.btn.btn-primary.btn-sm(href=`/teacher/courses/${c.id}/materials/upload`) Upload Material
+              a.btn.btn-success.btn-sm.ms-2(href=`/teacher/attendance/${c.id}`) Attendance
+              a.btn.btn-warning.btn-sm.ms-2(href=`/teacher/assignment/create?course_id=${c.id}`) Create Assignment
+              a.btn.btn-info.btn-sm.ms-2(href=`/teacher/assignments/${c.id}/submissions`) Submissions

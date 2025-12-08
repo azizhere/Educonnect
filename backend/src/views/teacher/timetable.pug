@@ -1,26 +1,57 @@
+//- extends ../layouts/main
+
+//- block content
+//-   h2.mb-4 My Weekly Timetable
+
+//-   table.table.table-bordered.table-striped
+//-     thead(style="background:#f0f0f0;")
+//-       tr
+//-         th Day
+//-         th Course
+//-         th Start
+//-         th End
+//-         th Room
+
+//-     tbody
+//-       if timetable.length === 0
+//-         tr
+//-           td(colspan="5") No classes scheduled
+//-       else
+//-         each slot in timetable
+//-           tr
+//-             td= slot.day
+//-             td= slot.course_title
+//-             td= slot.start_time
+//-             td= slot.end_time
+//-             td= slot.room
+
+
+
+
 extends ../layouts/main
 
 block content
-  h2.mb-4 My Weekly Timetable
+  .container.mt-4
+    h2 My Weekly Timetable
 
-  table.table.table-bordered.table-striped
-    thead(style="background:#f0f0f0;")
-      tr
-        th Day
-        th Course
-        th Start
-        th End
-        th Room
-
-    tbody
-      if timetable.length === 0
+    table.table.table-bordered.table-striped
+      thead
         tr
-          td(colspan="5") No classes scheduled
-      else
-        each slot in timetable
+          th Day
+          th Course
+          th Start
+          th End
+          th Room
+
+      tbody
+        if timetable.length === 0
           tr
-            td= slot.day
-            td= slot.course_title
-            td= slot.start_time
-            td= slot.end_time
-            td= slot.room
+            td(colspan="5") No classes scheduled
+        else
+          each t in timetable
+            tr
+              td= t.day
+              td= t.course_title
+              td= t.start_time
+              td= t.end_time
+              td= t.room

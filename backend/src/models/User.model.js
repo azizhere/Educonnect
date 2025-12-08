@@ -90,3 +90,26 @@ export const teacherCount = async(role) =>
    
   }
 
+
+export const updateUser = async (id, data) => {
+  const fields = Object.keys(data)
+    .map((key) => `${key} = ?`)
+    .join(", ");
+
+  const values = [...Object.values(data), id];
+
+  const query = `UPDATE users SET ${fields} WHERE id = ?`;
+
+  await pool.execute(query, values);
+
+  // return updated user
+  const [rows] = await pool.execute("SELECT * FROM users WHERE id = ?", [id]);
+  return rows[0];
+};
+
+
+export const deleteUser = async (id) => {
+  const query = "DELETE FROM users WHERE id = ?";
+  await pool.execute(query, [id]);
+  return true;
+};

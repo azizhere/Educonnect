@@ -4,6 +4,8 @@ import {
   teacherCount,
   studentCount,
   courseCount,
+  updateUser,
+  deleteUser
   // findUserByEmail,
   // getUsersByRole
 } from "../models/User.model.js";
@@ -83,6 +85,56 @@ export const createTeacherController = async (req, res) => {
     });
   }
 };
+/* ---------------------- EDIT TEACHER ---------------------- */
+
+export const editTeacherPage = async (req, res) => {
+  const { id } = req.params;
+  const teachers = await getUsersByRole(ROLES.TEACHER);
+  const teacher = teachers.find(t => t.id === id);
+
+  if (!teacher) {
+    return res.redirect("/admin/teachers?toast=Teacher not found");
+  }
+
+  res.render("admin/editTeacher", { title: "Edit Teacher", teacher });
+};
+
+export const updateTeacherController = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, email } = req.body;
+
+    const updated = await updateUser(id, { name, email });
+
+    if (!updated) {
+      return res.redirect("/admin/teachers?toast=Update failed");
+    }
+
+    res.redirect("/admin/teachers?toast=Teacher updated successfully");
+  } catch (error) {
+    console.log(error);
+    res.redirect("/admin/teachers?toast=Something went wrong");
+  }
+};
+
+/* ---------------------- DELETE TEACHER ---------------------- */
+
+export const deleteTeacherController = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const deleted = await deleteUser(id);
+
+    if (!deleted) {
+      return res.redirect("/admin/teachers?toast=Teacher not found");
+    }
+
+    res.redirect("/admin/teachers?toast=Teacher deleted successfully");
+  } catch (error) {
+    console.log(error);
+    res.redirect("/admin/teachers?toast=Error deleting teacher");
+  }
+};
 
 /* ---------------------- STUDENTS ---------------------- */
 
@@ -123,6 +175,53 @@ export const createStudentController = async (req, res) => {
       title: "Add Student",
       error: "Something went wrong!"
     });
+  }
+};
+
+export const editStudentPage = async (req, res) => {
+  const { id } = req.params;
+  const students = await getUsersByRole(ROLES.STUDENT);
+  const student = students.find(s => s.id === id);
+
+  if (!student) {
+    return res.redirect("/admin/students?toast=Student not found");
+  }
+
+  res.render("admin/editStudent", { title: "Edit Student", student });
+};
+
+export const updateStudentController = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, email } = req.body;
+
+    const updated = await updateUser(id, { name, email });
+
+    if (!updated) {
+      return res.redirect("/admin/students?toast=Update failed");
+    }
+
+    res.redirect("/admin/students?toast=Student updated successfully");
+  } catch (error) {
+    console.log(error);
+    res.redirect("/admin/students?toast=Something went wrong");
+  }
+};
+
+export const deleteStudentController = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const deleted = await deleteUser(id);
+
+    if (!deleted) {
+      return res.redirect("/admin/students?toast=Student not found");
+    }
+
+    res.redirect("/admin/students?toast=Student deleted successfully");
+  } catch (error) {
+    console.log(error);
+    res.redirect("/admin/students?toast=Error deleting student");
   }
 };
 
@@ -193,4 +292,34 @@ export const assignCourse = async (req, res) => {
   await updateCourse(id, { instructor: teacher });
 
   res.redirect("/admin/courses?toast=Teacher assigned successfully!");
+};
+
+
+/* ---------------------- EDIT COURSE ---------------------- */
+export const editCoursePage = async (req, res) => {
+  const { id } = req.params;
+  const courses = await getAllCourses();
+  const course = courses.find(c => c.id === id);
+
+  if (!course) {
+    return res.redirect("/admin/courses?toast=Course not found");
+  }
+    const teachers = await getUsersByRole(ROLES.TEACHER); // fetch all teachers
+
+  res.render("admin/editCourses", { title: "Edit Course", course, teachers });
+};
+
+export const editCourseAction = async (req, res) => {
+  const { id } = req.params;
+  const { title, description, instructor } = req.body;
+
+  await updateCourse(id, { title, description, instructor });
+  res.redirect("/admin/courses?toast=Course updated successfully");
+};
+
+/* ---------------------- DELETE COURSE ---------------------- */
+export const deleteCourseController = async (req, res) => {
+  const { id } = req.params;
+  await deleteCourse(id);
+  res.redirect("/admin/courses?toast=Course deleted successfully");
 };

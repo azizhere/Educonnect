@@ -1,26 +1,94 @@
+//- extends ../layouts/main.pug
+
+//- block content
+//-   .container(style="max-width:450px; margin-top:40px;")
+//-     h2 Login
+
+//-     if message
+//-       p(style="color:red") #{message}
+//-       script.
+//-         showToast("#{message}")
+
+
+//-     form(action="/auth/login" method="POST")
+//-       .form-group
+//-         label Email
+//-         input.form-control(type="email" name="email" required)
+
+//-       .form-group.mt-3
+//-         label Password
+//-         input.form-control(type="password" name="password" required)
+
+//-       button.btn.btn-primary.mt-3(type="submit") Login
+
+//-       p.mt-3
+//-         | Don't have an account?
+//-         a(href="/auth/register" style="margin-left:5px") Register
+
+
+
 extends ../layouts/main.pug
 
 block content
   .container(style="max-width:450px; margin-top:40px;")
-    h2 Login
+    .login-container
+      h1.text-center EduConnect
 
-    if message
-      p(style="color:red") #{message}
-      script.
-        showToast("#{message}")
+      form(action="/auth/login" method="POST")
+        // Email field
+        .form-group
+          label(for="email") Email
+          input#email.form-control(type="email" name="email" placeholder="Enter your email" required)
 
+        // Password field with toggle
+        .form-group.mt-3
+          label(for="password") Password
+          .password-wrapper.position-relative
+            input#password.form-control(type="password" name="password" placeholder="Enter your password" required)
+            span#toggle-password.toggle-password(style="position:absolute; right:10px; top:50%; transform:translateY(-50%); cursor:pointer; user-select:none") 👁️
 
-    form(action="/auth/login" method="POST")
-      .form-group
-        label Email
-        input.form-control(type="email" name="email" required)
+        // Submit button
+        button.btn.btn-primary.mt-3(type="submit") Sign In
 
-      .form-group.mt-3
-        label Password
-        input.form-control(type="password" name="password" required)
+      // Message display
+      if message
+        p(style="color:red; text-align:center; margin-top:10px") #{message}
 
-      button.btn.btn-primary.mt-3(type="submit") Login
+  // Custom styles
+  style.
+    .login-container {
+      background-color: #fff;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .login-container h1 {
+      color: #0b2e65;
+      margin-bottom: 1.5rem;
+    }
+    .password-wrapper input {
+      padding-right: 2.5rem; /* space for eye icon */
+    }
+    .toggle-password {
+      font-size: 1.2rem;
+      color: #555;
+    }
+    @media (max-width: 768px) {
+      .login-container {
+        padding: 1.5rem;
+      }
+    }
 
-      p.mt-3
-        | Don't have an account?
-        a(href="/auth/register" style="margin-left:5px") Register
+  // Script for password toggle
+  script.
+    const togglePassword = document.getElementById('toggle-password');
+    const passwordInput = document.getElementById('password');
+    togglePassword.addEventListener('click', () => {
+      if(passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        togglePassword.textContent = 'hide';
+      } else {
+        passwordInput.type = 'password';
+        togglePassword.textContent = '👁️';
+      }
+    });

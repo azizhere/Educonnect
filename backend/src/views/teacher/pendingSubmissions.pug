@@ -1,0 +1,26 @@
+extends ../layouts/main.pug
+
+block content
+  h1 #{title}
+
+  if submissions.length
+    table
+      thead
+        tr
+          th Student
+          th Assignment
+          th Course
+          th Submitted At
+          th Grade
+          th Feedback
+      tbody
+        each s in submissions
+          tr
+            td #{s.student_name}
+            td #{s.assignment_title}
+            td #{s.course_title}
+            td #{s.submitted_at}
+            td #{s.grade || "-"}
+            td #{s.feedback || "-"}
+  else
+    p No pending submissions.

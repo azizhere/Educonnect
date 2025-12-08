@@ -1,0 +1,16 @@
+extends ../layouts/main
+
+block content
+  .container.mt-4
+    h2 Edit Student
+
+    form(action=`/admin/students/edit/${student.id}` method="POST")
+      .form-group
+        label Name
+        input.form-control(type="text" name="name" value=student.name required)
+
+      .form-group.mt-3
+        label Email
+        input.form-control(type="email" name="email" value=student.email required)
+
+      button.btn.btn-primary.mt-3(type="submit") Update Student

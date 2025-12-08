@@ -8,16 +8,16 @@ import {
   studentDashboard,
 } from "../controllers/student.controller.js";
 import { uploadAssignment } from "../middleware/uploadAssignment.middleware.js";
-import { auth, authorizeRoles } from "../middleware/auth.middleware.js";
+import {   verifyJWT, authorizeRoles } from "../middleware/auth.middleware.js";
 import ROLES from "../constants/roles.js";
 
 const router = express.Router();
 
-router.get("/dashboard", auth, authorizeRoles(ROLES.STUDENT), studentDashboard);
+router.get("/dashboard",   verifyJWT, authorizeRoles(ROLES.STUDENT), studentDashboard);
 
 router.post(
   "/assignments/:id/submit",
-  auth,
+    verifyJWT,
   authorizeRoles(ROLES.STUDENT),
   uploadAssignment.single("file"),
   submitAssignment
@@ -25,28 +25,28 @@ router.post(
 
 router.get(
   "/attendance/:course_id",
-  auth,
+    verifyJWT,
   authorizeRoles(ROLES.STUDENT),
   getAttendance
 );
 
 router.get(
   "/assignments/:id/grade",
-  auth,
+    verifyJWT,
   authorizeRoles(ROLES.STUDENT),
   viewGrade
 );
 
 router.get(
   "/course/:id",
-  auth,
+    verifyJWT,
   authorizeRoles(ROLES.STUDENT),
   viewCourseDetails
 );
 
 router.get(
   "/assignment/:id",
-  auth,
+    verifyJWT,
   authorizeRoles(ROLES.STUDENT),
   viewAssignmentDetails
 );

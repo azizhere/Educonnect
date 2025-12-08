@@ -1,0 +1,23 @@
+extends ../layouts/main
+
+block content
+  .container.mt-4(style="max-width:600px")
+    h2 Edit Course
+
+    form(action=`/admin/courses/edit/${course.id}` method="POST")
+      .mb-3
+        label.form-label Title
+        input.form-control(type="text" name="title" value=course.title required)
+      .mb-3
+        label.form-label Description
+        textarea.form-control(name="description" required)= course.description
+      .mb-3
+        label.form-label Assigned Teacher
+        select.form-select(name="instructor" required)
+          option(value="") Select a teacher
+          each t in teachers
+            option(
+              value=t.id
+              selected=(course.instructor === t.id)
+            ) #{t.name} (#{t.email})
+      button.btn.btn-primary(type="submit") Update

@@ -38,23 +38,55 @@ export const getAllCourses = async () => {
       c.title,
       c.description,
       c.created_at,
-      u.name AS instructor_name
+      c.instructor,
+      u.name AS teacher_name,
+      u.email AS teacher_email
     FROM courses c
     LEFT JOIN users u ON c.instructor = u.id`);
   return rows;
 };
 
+// export const updateCourse = async (id, data) => {
+//   const { title, description, instructor } = data;
+  
+//   await pool.execute(
+//     `UPDATE courses SET title=?, description=?, instructor=? WHERE id=?`,
+//     [title, description, instructor, id]
+//   );
+  
+//   return { id, title, description, instructor };
+//   // return true;
+// };
+
+
 export const updateCourse = async (id, data) => {
-  const { title, description, instructor } = data;
-  
-  await pool.execute(
-    `UPDATE courses SET title=?, description=?, instructor=? WHERE id=?`,
-    [title, description, instructor, id]
-  );
-  
-  return { id, title, description, instructor };
-  // return true;
+  const fields = [];
+  const values = [];
+
+  if (data.title !== undefined) {
+    fields.push("title = ?");
+    values.push(data.title);
+  }
+
+  if (data.description !== undefined) {
+    fields.push("description = ?");
+    values.push(data.description);
+  }
+
+  if (data.instructor !== undefined) {
+    fields.push("instructor = ?");
+    values.push(data.instructor);
+  }
+
+  if (fields.length === 0) return; // nothing to update
+
+  values.push(id);
+
+  const sql = `UPDATE courses SET ${fields.join(", ")} WHERE id = ?`;
+  await pool.execute(sql, values);
 };
+
+
 
 export const deleteCourse = async (id) => {
   await pool.execute(`DELETE FROM courses WHERE id=?`, [id]);
