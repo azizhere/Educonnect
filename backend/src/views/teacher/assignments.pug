@@ -2,18 +2,30 @@ extends ../layouts/main.pug
 
 block content
   h1= title
+
   if assignments.length
-    table.table
+    table.table.table-bordered
       thead
         tr
           th Title
           th Course
           th Due Date
+          th Attachment
+          th Actions
       tbody
         each assignment in assignments
           tr
             td #{assignment.title}
             td #{assignment.course_name}
             td #{assignment.due_date.toISOString().split('T')[0]}
+            td
+              if assignment.attachment_url
+                a.btn.btn-sm.btn-primary(href=assignment.attachment_url target="_blank") View
+                a.btn.btn-sm.btn-success.ms-2(href=assignment.attachment_url download) Download
+              else
+                span.text-muted No file
+            td
+              form(action=`/teacher/assignment/delete/${assignment.id}` method="POST" style="display:inline")
+                button.btn.btn-sm.btn-danger(type="submit") Delete Assignment
   else
     p No assignments found.

@@ -15,7 +15,7 @@ import "./models/ClassTeacher.model.js";
 import "./models/ClassStudents.model.js";
 import "./models/CourseMaterials.model.js";
 import "./models/Assignment.model.js";
-import "./models/Enrolment.model.js";
+import "./models/Enrollment.model.js";
 // import "./models/Submission.model.js";
 import "./models/Timetable.model.js";
 import "./models/Attendance.model.js";
@@ -27,8 +27,8 @@ import indexRoutes from "./routes/index.js";
 
 const app = express();
 
-app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 app.use(cookieParser());
 
@@ -58,7 +58,40 @@ app.use((req, res, next) => {
 app.use(toastMiddleware);
 
 // Static files
-app.use(express.static(path.join(__dirname, "public")));
+
+
+// app.get("/download/:type/:filename", (req, res) => {
+//   const { type, filename } = req.params;
+//   const folder = ["materials", "assignments", "course-materials"].includes(type) ? type : null;
+//   if (!folder) return res.status(404).send("Invalid folder type");
+
+//   const filePath = path.join(__dirname, `../uploads/${folder}`, filename);
+//   res.download(filePath, filename, (err) => {
+//     if (err) res.status(404).send("File not found");
+//   });
+// });
+
+app.get("/uploads/:type/:filename", (req, res) => {
+  const { type, filename } = req.params;
+  const folderMap = {
+    materials: "materials",
+    assignments: "assignments",
+    "course-materials": "course-materials",
+  };
+
+  const folder = folderMap[type];
+  if (!folder) return res.status(404).send("Invalid folder type");
+
+  const filePath = path.join(__dirname, `../uploads/${folder}`, filename);
+
+  // Force download
+  res.download(filePath, filename, (err) => {
+    if (err) {
+      console.log(err);
+      res.status(404).send("File not found");
+    }
+  });
+});
 
 // Set pug
 app.set("views", path.join(__dirname, "views"));

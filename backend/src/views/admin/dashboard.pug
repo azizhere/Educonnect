@@ -1,10 +1,11 @@
 extends ../layouts/main
 
 block content
-  .container.mt-4
+  .container.mt-0
     h2 Admin Dashboard
 
-    .row.mt-4
+    // STAT CARDS
+    .row.mt-0
       .col-md-4
         .card.shadow-sm.p-3
           h4 Total Teachers
@@ -19,3 +20,31 @@ block content
         .card.shadow-sm.p-3
           h4 Total Courses
           p #{counts.courses}
+
+    // FILTER + TABLE
+    .row.mt-2
+      .col-md-12
+
+        // FILTER DROPDOWN
+        form(method="GET" action="/admin/dashboard")
+          .d-flex.justify-content-between.mb-3
+            h4.mb-0 Users List
+            
+            select.form-select(style="width:200px" name="filter" onchange="this.form.submit()")
+              option(value="all" selected=filter==='all') All
+              option(value="teacher" selected=filter==='teacher') Teachers
+              option(value="student" selected=filter==='student') Students
+
+        // USERS TABLE
+        table.table.table-striped.table-bordered
+          thead.table-dark
+            tr
+              th Name
+              th Email
+              th Role
+          tbody
+            each u in users
+              tr
+                td #{u.name}
+                td #{u.email}
+                td #{u.role}

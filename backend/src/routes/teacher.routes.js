@@ -11,15 +11,18 @@ import {
   saveAttendance,
   teacherTimetablePage,
   viewSubmissions,
+  deleteMaterial,
   teacherCourses,
   viewAssignmentSubmissions,
   viewSingleSubmission,
+  viewCourseMaterials,
     teacherAssignments,
     pendingSubmissions,
     allSubmissions,
     viewCourseSubmissions,
     createAssignmentPage,
     viewGradePage,
+    deleteAssignment,
   gradeStudentSubmission
 } from "../controllers/teacher.controller.js";
 import upload from "../middleware/upload.middleware.js"; // multer for files
@@ -70,57 +73,57 @@ router.put(
   authorizeRoles(ROLES.TEACHER),
   gradeStudentSubmission
 );
-// teacher.routes.js
-router.get(
-  "/assignments/:course_id/submissions",
-  verifyJWT,
-  authorizeRoles(ROLES.TEACHER),
-  viewAssignmentSubmissions
-);
-
-router.get(
-  "/assignments/:course_id/submissions",
-  verifyJWT,
-  authorizeRoles(ROLES.TEACHER),
-  viewCourseSubmissions
-);
 
 
 router.post(
   "/submissions/:id/grade",
-    verifyJWT,
+  verifyJWT,
   authorizeRoles(ROLES.TEACHER),
   gradeStudentSubmission
 );
 
 router.get("/attendance/:course_id", 
-    verifyJWT,
+  verifyJWT,
   authorizeRoles(ROLES.TEACHER), 
   attendancePage);
-
-router.post("/attendance/:course_id", 
+  
+  router.post("/attendance/:course_id", 
     verifyJWT,
-  authorizeRoles(ROLES.TEACHER), 
-  saveAttendance);
-
-router.get("/attendance/history/:course_id", 
-    verifyJWT,
-  authorizeRoles(ROLES.TEACHER),
-  attendanceHistory);
-
-
-router.get("/timetable",
-    verifyJWT,
-  authorizeRoles(ROLES.TEACHER), 
-  teacherTimetablePage);
-
-
-router.get(
-  "/assignments/:id/submissions",
-    verifyJWT,
-  authorizeRoles(ROLES.TEACHER),
-  viewAssignmentSubmissions
-);
+    authorizeRoles(ROLES.TEACHER), 
+    saveAttendance);
+    
+    router.get("/attendance/history/:course_id", 
+      verifyJWT,
+      authorizeRoles(ROLES.TEACHER),
+      attendanceHistory);
+      
+      
+      router.get("/timetable",
+        verifyJWT,
+        authorizeRoles(ROLES.TEACHER), 
+        teacherTimetablePage);
+           
+        // router.get(
+        //   "/assignments/:id/submissions",
+        //   verifyJWT,
+        //   authorizeRoles(ROLES.TEACHER),
+        //   viewAssignmentSubmissions
+        // );
+        // teacher.routes.js
+        
+        router.get(
+          "/course/:course_id/submissions",
+          verifyJWT,
+          authorizeRoles(ROLES.TEACHER),
+          viewCourseSubmissions
+        );
+        router.get(
+          "/assignments/:assignment_id/submissions",
+          verifyJWT,
+          authorizeRoles(ROLES.TEACHER),
+          viewAssignmentSubmissions
+        );
+        
 router.get(
   "/assignments",
   verifyJWT,
@@ -150,6 +153,28 @@ router.get(
 );
 
 router.get("/submissions/grade/:id", verifyJWT, authorizeRoles(ROLES.TEACHER), viewGradePage);
+router.post(
+  "/assignment/delete/:id",
+  verifyJWT,
+  authorizeRoles(ROLES.TEACHER),
+  deleteAssignment
+);
+
+// View all materials for a course
+router.get(
+  "/courses/:id/materials",
+  verifyJWT,
+  authorizeRoles(ROLES.TEACHER),
+  viewCourseMaterials
+);
+
+// Delete material
+router.post(
+  "/materials/delete/:id",
+  verifyJWT,
+  authorizeRoles(ROLES.TEACHER),
+  deleteMaterial
+);
 
 
 export default router;

@@ -1,31 +1,3 @@
-//- extends ../layouts/main
-
-//- block content
-//-   h1 Submissions for: #{assignment.title}
-//-   p Course: #{assignment.course_title}
-
-//-   table.table.table-striped
-//-     thead
-//-       tr
-//-         th Student
-//-         th Email
-//-         th Submitted At
-//-         th Grade
-//-         th Action
-//-     tbody
-//-       each s in submissions
-//-         tr
-//-           td #{s.student_name}
-//-           td #{s.email}
-//-           td #{s.submitted_at}
-//-           td #{s.grade ? s.grade : "Not graded"}
-//-           td
-//-             a.btn.btn-primary(href=`/teacher/submission/${s.id}`) View
-
-
-
-
-
 extends ../layouts/main
 
 block content
@@ -50,4 +22,8 @@ block content
             td #{s.submitted_at}
             td #{s.grade || "Not graded"}
             td
-              a.btn.btn-primary.btn-sm(href=`/teacher/submission/${s.id}`) View
+              if s.submission_id && s.submission_id !== "undefined"
+                a.btn.btn-primary.btn-sm(href=`/teacher/submission/${s.submission_id}`) View
+              else
+                | Not submitted
+

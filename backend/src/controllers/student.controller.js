@@ -208,41 +208,99 @@ export const viewAssignmentDetails = async (req, res) => {
 
 
 
-// export const submitAssignment = async (req, res) => {
-//   const assignmentId = req.params.id;
-//   const studentId = req.user.id;
-//   const file = req.file; // file uploaded via multer
+// Get list of courses for student
+export const getMyCourses = async (req, res) => {
+  const studentId = req.user.id;
+  try {
+    const [courses] = await pool.execute(
+      "SELECT c.id, c.title, c.description FROM enrollments e JOIN courses c ON e.course_id=c.id WHERE e.student_id=?",
+      [studentId]
+    );
+    res.render("student/myCourses", { title: "My Courses", courses });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Error fetching courses");
+  }
+};
 
-//   try {
-//     if (!file) {
-//       return res.send("Please upload a file!");
-//     }
+// Get list of pending assignments for student
+export const getPendingAssignments = async (req, res) => {
+  const studentId = req.user.id;
+  try {
+    const [assignments] = await pool.execute(
+      `SELECT a.id, a.title, a.due_date, c.title AS course
+       FROM assignments a
+       JOIN courses c ON a.course_id=c.id
+       WHERE a.course_id IN (SELECT course_id FROM enrollments WHERE student_id=?)
+       AND a.id NOT IN (SELECT assignment_id FROM submissions WHERE student_id=?)`,
+      [studentId, studentId]
+    );
+    res.render("student/assignments", { title: "Pending Assignments", assignments });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Error fetching assignments");
+  }
+};
 
-//     // Check if already submitted
-//     const [exists] = await pool.execute(
-//       `SELECT * FROM submissions
-//        WHERE assignment_id=? AND student_id=?`,
-//       [assignmentId, studentId]
-//     );
+// Get grades for student
+export const getGrades = async (req, res) => {
+  const studentId = req.user.id;
+  try {
+    const [grades] = await pool.execute(
+      `SELECT s.grade, s.feedback, a.title AS assignment, c.title AS course 
+       FROM submissions s
+       JOIN assignments a ON s.assignment_id = a.id
+       JOIN courses c ON a.course_id = c.id
+       WHERE s.student_id=?`,
+      [studentId]
+    );
+    res.render("student/grades", { title: "Grades", grades });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Error fetching grades");
+  }
+};
 
-//     if (exists.length > 0) {
-//       return res.send("You have already submitted this assignment.");
-//     }
+// Get timetable for student
+export const getTimetable = async (req, res) => {
+  const studentId = req.user.id;
+  try {
+    const [timetable] = await pool.execute(
+      "SELECT * FROM timetable WHERE student_id=?",
+      [studentId]
+    );
+    res.render("student/timetable", { title: "Timetable", timetable });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Error fetching timetable");
+  }
+};
 
-//     // Save submission
-//     await pool.execute(
-//       `INSERT INTO submissions (assignment_id, student_id, file_url)
-//        VALUES (?, ?, ?)`,
-//       [assignmentId, studentId, `/uploads/${file.filename}`]
-//     );
 
-//     res.redirect(`/student/assignment/${assignmentId}?toast=Submitted successfully`);
+// controllers/student.controller.js
 
-//   } catch (error) {
-//     console.log(error);
-//     res.status(500).send("Error submitting assignment");
-//   }
-// };
+export const viewAttendance = async (req, res) => {
+  const studentId = req.user.id;
+
+  try {
+    const [attendance] = await pool.execute(`
+      SELECT 
+        COUNT(*) AS total_classes,
+        SUM(CASE WHEN status='present' THEN 1 ELSE 0 END) AS present
+      FROM attendance
+      WHERE student_id=?
+    `, [studentId]);
+
+    res.render("student/attendance", {
+      title: "Attendance",
+      attendance
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Error loading attendance page");
+  }
+};
+
 
 
 

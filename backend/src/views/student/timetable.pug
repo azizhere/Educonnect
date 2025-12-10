@@ -1,0 +1,27 @@
+extends ../layouts/main
+
+block content
+  .container.mt-5
+    h1.text-center.mb-4 Timetable
+
+    if timetable.length
+      table.table.table-striped.table-hover
+        thead.table-dark
+          tr
+            th #
+            th Day
+            th Start Time
+            th End Time
+            th Subject
+            th Room
+        tbody
+          each t, i in timetable
+            tr
+              td #{i + 1}
+              td #{t.day}
+              td #{t.start_time}
+              td #{t.end_time}
+              td #{t.subject || "N/A"}
+              td #{t.room || "N/A"}
+    else
+      p.text-center.text-muted Timetable not available yet.

@@ -1,0 +1,17 @@
+extends ../layouts/main
+
+block content
+  .container.mt-5
+    h1.text-center.mb-4 My Courses
+
+    if courses.length
+      .row.row-cols-1.row-cols-md-3.g-4
+        each course in courses
+          .col
+            .card.h-100.shadow-sm.border-primary
+              .card-body
+                h5.card-title #{course.title}
+                p.card-text #{course.description || "No description provided."}
+                a.btn.btn-sm.btn-primary.mt-3(href=`/student/course/${course.id}`) View Course
+    else
+      p.text-center.text-muted No courses enrolled yet.

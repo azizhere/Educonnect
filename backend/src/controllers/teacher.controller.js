@@ -1,4 +1,6 @@
 import pool from "../config/db.js";
+import fs from "fs";
+import path from "path";
 import {
   createAssignment,
   getAssignmentsByCourse,
@@ -67,7 +69,6 @@ export const addAssignment = async (req, res) => {
 //     res.send("Error loading assignments");
 //   }
 // };
-
 
 export const getCourseAssignments = async (req, res) => {
   try {
@@ -206,13 +207,12 @@ export const viewCourseSubmissions = async (req, res) => {
   let submissions = [];
   for (let a of assignments) {
     const s = await getSubmissionsByAssignment(a.id);
-    s.forEach(sub => (sub.assignment_title = a.title));
+    s.forEach((sub) => (sub.assignment_title = a.title));
     submissions.push(...s);
   }
 
-  res.render("submissionList", { submissions, assignments });
+  res.render("teacher/allSubmissions", { submissions, assignments });
 };
-
 
 export const viewSubmissions = async (req, res) => {
   const { assignment_id } = req.params;
@@ -248,7 +248,7 @@ export const gradeStudentSubmission = async (req, res) => {
     if (!updated) {
       return res.status(404).json({
         success: false,
-        message: "Submission not found",
+        message: "Submission not found for gradeStudentSubmission function in teacher controller",
       });
     }
 
@@ -352,7 +352,7 @@ export const allSubmissions = async (req, res) => {
     });
   } catch (err) {
     console.log(err);
-    res.send("Error loading submissions");
+    res.send("Error loading submissions for All Submission Function");
   }
 };
 // List all pending submissions for assignments created by the logged-in teacher
@@ -384,7 +384,7 @@ export const pendingSubmissions = async (req, res) => {
 
 // controllers/teacher.controller.js
 export const viewAssignmentSubmissions = async (req, res) => {
-  const assignmentId = req.params.id;
+  const assignmentId = req.params.assignment_id;
 
   try {
     const assignment = await getAssignmentWithCourse(assignmentId);
@@ -400,18 +400,22 @@ export const viewAssignmentSubmissions = async (req, res) => {
     });
   } catch (err) {
     console.log(err);
-    res.send("Error loading submissions");
+    res.send("Error loading pending submissions od getAssignement function");
   }
 };
 
 export const viewSingleSubmission = async (req, res) => {
   const submissionId = req.params.id;
+  
+  if (!submissionId || submissionId === "undefined") {
+    return res.send("Submission not found: Invalid ID");
+  }
 
   try {
     const submission = await getSingleSubmission(submissionId);
 
     if (!submission || submission.length === 0)
-      return res.send("Submission not found");
+      return res.send("Submission not found for view single submission function in teacher controller");
 
     res.render("teacher/singleSubmission", {
       title: "Submission Details",
@@ -419,7 +423,7 @@ export const viewSingleSubmission = async (req, res) => {
     });
   } catch (err) {
     console.log(err);
-    res.send("Error loading submission");
+    res.send("Error loading submission for viewSingleSubmission function");
   }
 };
 
@@ -453,4 +457,83 @@ export const createAssignmentPage = async (req, res) => {
     title: "Create Assignment",
   });
   if (!course_id) return res.send("Course ID missing");
+};
+
+
+
+export const deleteAssignment = async (req, res) => {
+  const assignmentId = req.params.id;
+  try {
+    // 1️⃣ Get attachment URL
+    const [rows] = await pool.execute(
+      "SELECT attachment_url FROM assignments WHERE id = ?",
+      [assignmentId]
+    );
+
+    if (rows.length) {
+      const fileUrl = rows[0].attachment_url;
+      if (fileUrl) {
+        // Make sure to build proper path
+        const filePath = path.join(process.cwd(), fileUrl); // assumes file URL starts with /uploads/...
+        if (fs.existsSync(filePath)) {
+          fs.unlinkSync(filePath); // delete file synchronously
+        }
+      }
+    }
+
+    // 2️⃣ Delete assignment row
+    await pool.execute("DELETE FROM assignments WHERE id = ?", [assignmentId]);
+
+    res.redirect(req.get("referer") || "/teacher/assignments");
+  } catch (err) {
+    console.error("Error deleting assignment:", err);
+    res.send("Error deleting assignment");
+  }
+};
+
+
+export const viewCourseMaterials = async (req, res) => {
+  try {
+    const courseId = req.params.id;
+    const teacherId = req.user.id;
+
+    const [materials] = await pool.execute(
+      `SELECT id, title, file_url, uploaded_by
+       FROM course_materials
+       WHERE course_id = ? AND uploaded_by = ?`,
+      [courseId, teacherId]
+    );
+
+    res.render("teacher/viewMaterials", {
+      title: "Course Materials",
+      materials,
+      course_id: courseId
+    });
+  } catch (err) {
+    console.log(err);
+    res.send("Error loading course materials");
+  }
+};
+
+export const deleteMaterial = async (req, res) => {
+  try {
+    const materialId = req.params.id;
+
+    const [rows] = await pool.execute(
+      "SELECT file_url, course_id FROM course_materials WHERE id = ?",
+      [materialId]
+    );
+
+    if (!rows.length) return res.send("Material not found");
+
+    const filePath = path.join(process.cwd(), rows[0].file_url);
+    if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+
+    await pool.execute("DELETE FROM course_materials WHERE id = ?", [materialId]);
+
+    res.redirect(`/teacher/courses/${rows[0].course_id}/materials`);
+  } catch (err) {
+    console.log(err);
+    res.send("Error deleting material");
+  }
 };

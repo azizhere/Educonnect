@@ -97,31 +97,45 @@ export const viewAssignmentSubmissions = async (req, res) => {
     });
   } catch (err) {
     console.log(err);
-    res.send("Error loading submissions");
+    res.send("Error loading submissions for function viewAssignmentSubmissions");
   }
 };
 
-export const getSingleSubmission = async (req, res) => {
-  const submissionId = req.params.id;
+// export const getSingleSubmission = async (req, res) => {
+//   const submissionId = req.params.id;
 
-  try {
-    const [rows] = await pool.execute(
-      `SELECT s.*, a.title AS assignment_title, u.name AS student_name
-       FROM submissions s
-       JOIN assignments a ON s.assignment_id = a.id
-       JOIN users u ON s.student_id = u.id
-       WHERE s.id=?`,
-      [submissionId]
-    );
+//   try {
+//     const [rows] = await pool.execute(
+//       `SELECT s.*, a.title AS assignment_title, u.name AS student_name
+//        FROM submissions s
+//        JOIN assignments a ON s.assignment_id = a.id
+//        JOIN users u ON s.student_id = u.id
+//        WHERE s.id=?`,
+//       [submissionId]
+//     );
 
-    if (rows.length === 0) return res.send("Submission not found");
+//     if (rows.length === 0) return res.send("Submission not found");
 
-    res.render("teacher/singleSubmission", {
-      title: "Submission Details",
-      submission: rows[0],
-    });
-  } catch (err) {
-    console.log(err);
-    res.send("Error loading submission");
-  }
+//     res.render("teacher/singleSubmission", {
+//       title: "Submission Details",
+//       submission: rows[0],
+//     });
+//   } catch (err) {
+//     console.log(err);
+//     res.send("Error loading submission for function getSingleSubmission");
+//   }
+// };
+
+
+export const getSingleSubmission = async (submissionId) => {
+  const [rows] = await pool.execute(
+    `SELECT s.*, a.title AS assignment_title, u.name AS student_name, u.email AS student_email
+     FROM submissions s
+     JOIN assignments a ON s.assignment_id = a.id
+     JOIN users u ON s.student_id = u.id
+     WHERE s.id=?`,
+    [submissionId]
+  );
+
+  return rows; // data return karo, render mat karo
 };

@@ -5,9 +5,9 @@ import {
   studentCount,
   courseCount,
   updateUser,
-  deleteUser
+  deleteUser,
   // findUserByEmail,
-  // getUsersByRole
+  getUsersByRoles
 } from "../models/User.model.js";
 
 import {
@@ -20,13 +20,20 @@ import {
 } from "../models/Course.model.js";
 
 import ROLES from "../constants/roles.js";
-
+import { enrollStudentInCourse } from "../models/Enrollment.model.js";
 // Dashboard
 export const adminDashboard = async (req, res) => {
   try {
     const numberOfTeacher = await teacherCount();
     const numberOfStudent = await studentCount();
     const numberOfCourses = await courseCount();
+    let users;
+    const { filter } = req.query;
+    if (!filter || filter === "all") {
+    users = await getUsersByRoles("%"); // custom function below
+  } else {
+    users = await getUsersByRoles(filter);
+  }
 
   return res.render("admin/dashboard", { title: "Admin Dashboard",
      counts: {
@@ -34,7 +41,10 @@ export const adminDashboard = async (req, res) => {
         students: numberOfStudent,
         courses: numberOfCourses
       },
-      user: req.user
+      user: req.user,
+      users,
+      filter:filter || "all",
+      toast: req.toast,
   });
 }catch (error) {
     console.error("Dashboard Error:", error);
@@ -323,3 +333,95 @@ export const deleteCourseController = async (req, res) => {
   await deleteCourse(id);
   res.redirect("/admin/courses?toast=Course deleted successfully");
 };
+
+// Show Enrollment Form Page
+export const showEnrollmentPage = async (req, res) => {
+  try {
+    const students = await getUsersByRole("student");
+    const teachers = await getUsersByRole("teacher");
+    const courses = await getAllCourses();
+
+    return res.render("admin/enrollment", {
+      title: "Enroll Student",
+      students,
+      courses,
+      user: req.user,
+      toast: req.toast
+    });
+  } catch (error) {
+    console.log("Enrollment Page Error:", error);
+    return res.status(500).send("Failed to load enrollment page");
+  }
+};
+
+// Handle Enrollment Submission
+export const enrollStudentController = async (req, res) => {
+  try {
+    const { student_id, course_id } = req.body;
+    console.log("BODY:", req.body);
+    if (!student_id || !course_id) {
+      return res.redirect("/admin/enroll?toast=All fields are required");
+    }
+
+    await enrollStudentInCourse({student_id, course_id});
+
+    return res.redirect("/admin/enroll?toast=Student enrolled successfully");
+  } catch (error) {
+    console.log("Enroll Error:", error);
+    return res.redirect("/admin/enroll?toast=Failed to enroll student");
+  }
+};
+
+// export const showEnrollmentPage = async (req, res) => {
+//   try {
+//     const [students] = await pool.execute(
+//       "SELECT id, name, email FROM users WHERE role = 'student'"
+//     );
+
+//     const [courses] = await pool.execute(
+//       "SELECT id, title FROM courses"
+//     );
+
+//     res.render("admin/enrollment", {
+//       title: "Enroll Student",
+//       students,
+//       courses,
+//     });
+//   } catch (err) {
+//     console.log(err);
+//     res.send("Error loading enrollment page");
+//   }
+// };
+
+
+
+
+// export const enrollStudent = async (req, res) => {
+//   try {
+//     const { student_id, course_id } = req.body;
+
+//     // Check if already enrolled
+//     const [exists] = await pool.execute(
+//       "SELECT * FROM enrolments WHERE student_id = ? AND course_id = ?",
+//       [student_id, course_id]
+//     );
+
+//     if (exists.length > 0) {
+//       req.toast("Student is already enrolled in this course!");
+//       return res.redirect("/admin/enroll");
+//     }
+
+//     // Insert new enrolment
+//     await pool.execute(
+//       "INSERT INTO enrolments (student_id, course_id) VALUES (?, ?)",
+//       [student_id, course_id]
+//     );
+
+//     req.toast("Student enrolled successfully!");
+//     res.redirect("/admin/enroll");
+//   } catch (err) {
+//     console.log(err);
+//     req.toast("Error enrolling student");
+//     res.redirect("/admin/enroll");
+//   }
+// };

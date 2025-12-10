@@ -1,0 +1,22 @@
+extends ../layouts/main
+
+block content
+  .container.mt-5.pt-4
+    h2 Enroll Student into a Course
+
+    form(method="POST" action="/admin/enroll")
+      .mb-3
+        label.form-label Select Student
+        select.form-select(name="student_id" required)
+          option(value="") -- Select Student --
+          each student in students
+            option(value=student.id)= student.name + " (" + student.email + ")"
+
+      .mb-3
+        label.form-label Select Course
+        select.form-select(name="course_id" required)
+          option(value="") -- Select Course --
+          each course in courses
+            option(value=course.id)= course.title
+
+      button.btn.btn-primary(type="submit") Enroll Student

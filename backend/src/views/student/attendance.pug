@@ -1,16 +1,14 @@
-extends ../layouts/student_layout
+extends ../layouts/main
 
 block content
-  h2 Attendance Record
+  .container.mt-5
+    h1.text-center.mb-4 Attendance
 
-  table
-    thead
-      tr
-        th Date
-        th Status
-    tbody
-      each a in attendance
-        tr
-          td= a.date.toDateString()
-          td= a.status
-                
+    p.text-center.mb-2 Total Classes: #{attendance[0].total_classes || 0}
+    p.text-center.mb-2 Present: #{attendance[0].present || 0}
+
+    - var percent = attendance[0].total_classes ? Math.round((attendance[0].present / attendance[0].total_classes) * 100) : 0
+    .progress
+      .progress-bar.bg-success(role="progressbar" style=`width: ${percent}%`) #{percent}%
+
+    a.btn.btn-sm.btn-primary.mt-3.d-block.mx-auto(href="/student/dashboard") Back to Dashboard

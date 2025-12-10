@@ -24,7 +24,9 @@ import {
   assignCourse,
   editCoursePage,
   editCourseAction,
-  deleteCourseController
+  deleteCourseController,
+  showEnrollmentPage, 
+  enrollStudentController
 } from "../controllers/admin.controller.js";
 
 import { verifyJWT  } from "../middleware/auth.middleware.js";
@@ -71,6 +73,8 @@ router.post("/students/edit/:id", updateStudentController);
 
 // Delete Student
 router.get("/students/delete/:id", deleteStudentController);
+router.get("/enroll",  showEnrollmentPage);
+router.post("/enroll",  enrollStudentController);
 
 
 

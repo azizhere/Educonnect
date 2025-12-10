@@ -1,0 +1,25 @@
+extends ../layouts/main
+
+block content
+  .container.mt-5
+    h1.text-center.mb-4 Grades
+
+    if grades.length
+      table.table.table-bordered.table-hover
+        thead.table-dark
+          tr
+            th #
+            th Assignment
+            th Course
+            th Grade
+            th Feedback
+        tbody
+          each g, i in grades
+            tr
+              td #{i + 1}
+              td #{g.assignment}
+              td #{g.course}
+              td #{g.grade || "Pending"}
+              td #{g.feedback || "-"}
+    else
+      p.text-center.text-muted No grades available yet.

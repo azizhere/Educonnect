@@ -1,0 +1,26 @@
+extends ../layouts/main
+
+block content
+  .container.mt-5
+    h1.text-center.mb-4 Pending Assignments
+
+    if assignments.length
+      table.table.table-striped.table-hover
+        thead.table-dark
+          tr
+            th #
+            th Assignment
+            th Course
+            th Due Date
+            th Action
+        tbody
+          each a, i in assignments
+            tr
+              td #{i + 1}
+              td #{a.title}
+              td #{a.course}
+              td #{a.due_date.toISOString().split('T')[0]}
+              td
+                a.btn.btn-sm.btn-warning(href=`/student/assignment/${a.id}`) Submit
+    else
+      p.text-center.text-muted No pending assignments.

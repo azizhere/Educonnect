@@ -52,7 +52,11 @@ export const findByEmail = async (email) => {
 
   return rows[0];
 };
-export const getUsersByRole = async (role) => {
+export const getUsersByRoles = async (role) => {
+    if (role === "%" || role === "all") {
+    const [rows] = await pool.execute("SELECT * FROM users");
+    return rows;
+  }
   const [rows] = await pool.execute("SELECT * FROM users WHERE role = ?", [role]);
   return rows;
 };
