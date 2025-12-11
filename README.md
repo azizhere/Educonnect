@@ -17,7 +17,6 @@ Clone the project to your local machine:
 git clone <your-repository-link>
 cd project-folder/backend
 npm install
-.env
 node src/server.js
 cd backend
 node scripts/createAdmin.js
