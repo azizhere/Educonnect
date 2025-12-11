@@ -14,8 +14,8 @@ Make sure you have the following installed before running the project:
 Clone the project to your local machine:
 
 ```bash
-git clone <your-repository-link>
-cd project-folder/backend
+git clone https://github.com/azizhere/Educonnect.git
+cd Educonnect/backend
 npm install
 node src/server.js
 cd backend
