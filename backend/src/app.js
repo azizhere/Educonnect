@@ -92,6 +92,8 @@ app.get("/uploads/:type/:filename", (req, res) => {
     }
   });
 });
+// Static files (VERY IMPORTANT)
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 // Set pug
 app.set("views", path.join(__dirname, "views"));

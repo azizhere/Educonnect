@@ -1,9 +1,39 @@
+//- extends ../layouts/main.pug
+
+//- block content
+//-   h2 Assignments for #{course_title}
+  
+//-   ul
+//-     each assignment in assignments
+//-       li
+//-         a(href=`/teacher/assignments/${assignment.id}/submissions`) #{assignment.title} - Due: #{assignment.due_date}
+
+
+
 extends ../layouts/main.pug
 
 block content
-  h2 Assignments for #{course_title}
-  
-  ul
-    each assignment in assignments
-      li
-        a(href=`/teacher/assignments/${assignment.id}/submissions`) #{assignment.title} - Due: #{assignment.due_date}
+  .container.mt-4
+    h2.text-center.mb-4 Assignments for #{course_title}
+
+    if assignments.length
+      table.table.table-striped.table-hover
+        thead.table-dark
+          tr
+            th # 
+            th Title
+            th Due Date
+            th Submissions
+            th Actions
+        tbody
+          each assignment, index in assignments
+            tr
+              td #{index + 1}
+              td #{assignment.title}
+              td #{assignment.due_date}
+              td
+                a.btn.btn-sm.btn-info(href=`/teacher/assignments/${assignment.id}/submissions`) View
+              td
+                a.btn.btn-sm.btn-danger(href=`/teacher/assignment/delete/${assignment.id}`) Delete
+    else
+      p.text-center.text-muted No assignments found for this course.

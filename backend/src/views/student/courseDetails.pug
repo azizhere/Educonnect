@@ -1,30 +1,65 @@
-extends ../layout
+extends ../layouts/main.pug
 
 block content
-  h1 #{course.title}
-  p #{course.description}
+  .container-fluid.px-4.py-4  
+    h1.h3.fw-bold.text-dark.mb-3.animate-fadeIn #{course.title}
+    p.text-muted.mb-4.animate-fadeIn.delay-200 #{course.description}
 
-  hr
+    hr
 
-  h2 Materials
-  if materials.length === 0
-    p No materials uploaded yet.
-  else
-    ul
-      each m in materials
-        li
-          strong #{m.title}
-          |  - 
-          a(href=m.file_url, target="_blank") Download
+    // Materials Section
+    h2.h4.fw-bold.text-dark.mb-3.animate-fadeIn.delay-400 Materials
+    if materials.length === 0
+      p.text-muted.animate-fadeIn.delay-600 No materials uploaded yet.
+    else
+      .table-responsive.animate-slideUp
+        table.table.table-bordered.table-hover.shadow-sm
+          thead.table-light
+            tr
+              th Title
+              th Download
+          tbody
+            each m in materials
+              tr
+                td #{m.title}
+                td 
+                  a(href=m.file_url target="_blank" class="text-primary fw-semibold") Download
 
-  hr
+    hr.my-5
 
-  h2 Assignments
-  if assignments.length === 0
-    p No assignments posted yet.
-  else
-    ul
-      each a in assignments
-        li
-          a(href=`/student/assignment/${a.id}`) #{a.title}
-          |  (Due: #{a.due_date})
+    // Assignments Section
+    h2.h4.fw-bold.text-dark.mb-3.animate-fadeIn.delay-800 Assignments
+    if assignments.length === 0
+      p.text-muted.animate-fadeIn.delay-1000 No assignments posted yet.
+    else
+      .table-responsive.animate-slideUp
+        table.table.table-bordered.table-hover.shadow-sm
+          thead.table-light
+            tr
+              th Title
+              th Due Date
+          tbody
+            each a in assignments
+              tr
+                td 
+                  a(href=`/student/assignment/${a.id}` class="text-dark fw-semibold") #{a.title}
+                td.text-muted #{a.due_date}
+
+  // Animations
+  style.
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .animate-fadeIn { animation: fadeIn 0.6s ease forwards; }
+    .delay-200 { animation-delay: 0.2s; }
+    .delay-400 { animation-delay: 0.4s; }
+    .delay-600 { animation-delay: 0.6s; }
+    .delay-800 { animation-delay: 0.8s; }
+    .delay-1000 { animation-delay: 1s; }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-slideUp { animation: slideUp 0.5s ease forwards; }

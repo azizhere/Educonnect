@@ -301,11 +301,6 @@ export const viewAttendance = async (req, res) => {
   }
 };
 
-
-
-
-
-
 export const getAttendance = async (req, res) => {
   try {
     const { course_id } = req.params;   // match your route
@@ -319,5 +314,33 @@ export const getAttendance = async (req, res) => {
     res.json({ success: true, attendance });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+
+export const viewProfile = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    // USER TABLE SE STUDENT KA DATA LO
+    const [user] = await pool.execute(
+      `SELECT id, name, email, role, created_at 
+       FROM users 
+       WHERE id = ? AND role = 'student'`,
+      [userId]
+    );
+
+    if (user.length === 0) {
+      return res.status(404).send("Student not found");
+    }
+
+    res.render("student/profile", {
+      title: "My Profile",
+      student: user[0],
+    });
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Error loading profile page");
   }
 };

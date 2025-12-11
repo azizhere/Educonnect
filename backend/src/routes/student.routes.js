@@ -10,6 +10,7 @@ import {
   getPendingAssignments,
   getGrades,
   viewAttendance ,
+  viewProfile,
   getTimetable
 } from "../controllers/student.controller.js";
 import { uploadAssignment } from "../middleware/uploadAssignment.middleware.js";
@@ -31,6 +32,12 @@ router.get("/grades", verifyJWT, authorizeRoles(ROLES.STUDENT), getGrades);
 
 // Timetable page
 router.get("/timetable", verifyJWT, authorizeRoles(ROLES.STUDENT), getTimetable);
+router.get(
+  "/profile",
+  verifyJWT,
+  authorizeRoles(ROLES.STUDENT),
+  viewProfile
+);
 
 // Assignment submission
 router.post(

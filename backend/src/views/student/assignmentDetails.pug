@@ -1,27 +1,56 @@
-extends ../layouts/main
+extends ../layouts/main.pug
 
 block content
-  h1 #{assignment.title}
-  p Course: #{assignment.course_title}
-  p Due Date: #{assignment.due_date}
-  hr
+  .container.mt-5
+    .card.shadow-lg.rounded-3
+      .card-body.p-4
 
-  if submission
-    h3 Your Submission
-    p Submitted At: #{submission.submitted_at}
-    a(href=submission.file_url, target="_blank") Download File
+        h1.h3.fw-bold.mb-2 #{assignment.title}
 
-    if submission.grade
-      hr
-      h3 Grade
-      p Marks: #{submission.grade}
-      p Feedback: #{submission.feedback}
-    else
-      p Status: Submitted (Waiting for grading)
+        p.text-muted.mb-1 
+          | Course: 
+          span.fw-semibold.text-dark #{assignment.course_title}
 
-  else
-    h3 Submit Assignment
-    form(method="POST" action=`/student/assignments/${assignment.id}/submit` enctype="multipart/form-data")
-      input(type="file" name="file" required)
-      br
-      button.btn.btn-primary(type="submit") Upload
+        p.text-muted.mb-4
+          | Due Date: 
+          span.fw-semibold.text-danger #{assignment.due_date}
+
+        hr.my-4
+
+        if submission
+          h3.h5.text-success.fw-bold.mb-3 Your Submission
+
+          .p-3.mb-4.border-start.border-4.border-success.bg-light.rounded
+            p.mb-1.text-dark
+              | Submitted At: 
+              span.fw-semibold #{submission.submitted_at}
+
+            a(href=submission.file_url, target="_blank" class="fw-semibold text-primary")
+              | ⬇ Download File
+
+          if submission.grade
+            hr.my-4
+            h3.h5.text-primary.fw-bold.mb-3 Grade
+
+            .p-3.border-start.border-4.border-primary.bg-light.rounded
+              p.mb-1
+                | Marks: 
+                span.fw-bold #{submission.grade}
+
+              p.mb-0
+                | Feedback: 
+                span.fw-bold #{submission.feedback}
+
+          else
+            p.text-warning.fw-semibold Status: Submitted (Waiting for grading)
+
+        else
+          h3.h5.fw-bold.text-dark.mb-3 Submit Assignment
+
+          form(method="POST" action=`/student/assignments/${assignment.id}/submit` enctype="multipart/form-data" class="mt-3")
+            .mb-3
+              label.form-label.fw-semibold Choose File
+              input.form-control(type="file" name="file" required)
+
+            button.btn.btn-primary.btn-lg.mt-2(type="submit")
+              | Upload

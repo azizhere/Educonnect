@@ -37,11 +37,13 @@ export const addAssignment = async (req, res) => {
       created_by,
     });
 
-    res.status(201).json({
-      success: true,
-      message: "Assignment created successfully!",
-      assignment,
-    });
+    // res.status(201).json({
+    //   success: true,
+    //   message: "Assignment created successfully!",
+    //   assignment,
+    // });
+    // Instead of res.json(), redirect to the assignments page for this course
+    res.redirect(`/teacher/assignment/${course_id}`);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
