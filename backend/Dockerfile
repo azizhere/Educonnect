@@ -1,5 +1,5 @@
 FROM node:18
-
+# Dockerfile for Educonnect backend service
 WORKDIR /app
 
 COPY package*.json ./

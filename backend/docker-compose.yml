@@ -1,5 +1,5 @@
 version: "3.9"
-
+# Docker Compose configuration for Educonnect backend and MySQL database
 services:
   backend:
     build: .

@@ -21,3 +21,4 @@ node src/server.js
 cd backend
 node scripts/createAdmin.js
 node src/server.js
+env availible on request
