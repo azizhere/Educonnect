@@ -15,7 +15,7 @@ export const createClassTeacherTable = async () => {
   await pool.execute(query);
 };
 
-createClassTeacherTable();
+
 
 export const addClassTeacher = async ({ class_id, teacher_id }) => {
   const id = uuidv4();

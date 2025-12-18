@@ -22,7 +22,7 @@ export const createAttendanceTable = async () => {
   await pool.execute(query);
 };
 
-createAttendanceTable();
+
 
 
 

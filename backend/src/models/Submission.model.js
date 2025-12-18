@@ -21,7 +21,7 @@ export const createSubmissionsTable = async () => {
   await pool.execute(query);
 };
 
-createSubmissionsTable();
+
 
 
 export const getSubmissionsByAssignment = async (assignment_id) => {

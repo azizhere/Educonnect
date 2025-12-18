@@ -13,7 +13,7 @@ export const createClassTable = async () => {
   await pool.execute(query);
 };
 
-createClassTable();
+
 
 export const createClass = async ({ name, year }) => {
   const id = uuidv4();

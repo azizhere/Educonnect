@@ -9,8 +9,8 @@ import {
 import {
   getSubmissionsByAssignment,
   getSingleSubmission,
-} from "../models/submission.model.js";
-import { updateGradeSubmission } from "../models/submission.model.js";
+  updateGradeSubmission
+} from "../models/Submission.model.js";
 import {
   getStudentsByCourse,
   markAttendance,

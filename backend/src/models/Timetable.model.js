@@ -22,7 +22,7 @@ export const createTimetableTable = async () => {
   await pool.execute(query);
 };
 
-createTimetableTable();
+
 
 
 

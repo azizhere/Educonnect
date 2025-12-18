@@ -17,7 +17,7 @@ export const createCourseMaterialsTable = async () => {
   await pool.execute(query);
 };
 
-createCourseMaterialsTable();
+
 
 
 // Insert material

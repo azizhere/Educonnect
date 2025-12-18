@@ -15,7 +15,7 @@ export const createClassStudentsTable = async () => {
   await pool.execute(query);
 };
 
-createClassStudentsTable();
+
 
 export const addStudentToClass = async ({ class_id, student_id }) => {
   const id = uuidv4();

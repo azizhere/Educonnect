@@ -19,7 +19,7 @@ export const createAssignmentsTable = async () => {
   await pool.execute(query);
 };
 
-createAssignmentsTable();
+
 
 
 

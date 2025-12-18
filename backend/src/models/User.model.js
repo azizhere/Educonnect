@@ -20,7 +20,7 @@ export const createUserTable = async () => {
   await pool.execute(query);
 };
 
-createUserTable();
+
 
 // ✅ Create User
 export const createUser = async ({ name, email, password, role }) => {

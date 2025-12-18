@@ -2,7 +2,7 @@ import pool from "../config/db.js";
 import { v4 as uuidv4 } from "uuid";
 
 // Create Table if not exists
-const createCourseTable = async () => {
+export const createCourseTable = async () => {
   const query = `
  CREATE TABLE IF NOT EXISTS courses (
   id VARCHAR(36) PRIMARY KEY,
@@ -18,7 +18,7 @@ const createCourseTable = async () => {
   await pool.execute(query);
 };
 
-createCourseTable();
+
 
 // Model Functions
 export const createCourse = async ({ title, description, instructor }) => {

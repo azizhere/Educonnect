@@ -8,23 +8,23 @@ import courseRoutes from "./routes/course.routes.js";
 import { fileURLToPath } from "url";
 import session from "express-session";
 import { toastMiddleware } from "./middleware/toast.middleware.js";
-import "./models/User.model.js";
-import "./models/Course.model.js";
-import "./models/Class.model.js";
-import "./models/ClassTeacher.model.js";
-import "./models/ClassStudents.model.js";
-import "./models/CourseMaterials.model.js";
-import "./models/Assignment.model.js";
-import "./models/Enrollment.model.js";
-// import "./models/Submission.model.js";
-import "./models/Timetable.model.js";
-import "./models/Attendance.model.js";
+// import "./models/User.model.js";
+// import "./models/Course.model.js";
+// import "./models/Class.model.js";
+// import "./models/ClassTeacher.model.js";
+// import "./models/ClassStudents.model.js";
+// import "./models/CourseMaterials.model.js";
+// import "./models/Assignment.model.js";
+// import "./models/Enrollment.model.js";
+// // import "./models/Submission.model.js";
+// import "./models/Timetable.model.js";
+// import "./models/Attendance.model.js";
 import attendanceRoutes from "./routes/attendance.routes.js";
 import submissionRoutes from "./routes/submission.routes.js";
 import indexRoutes from "./routes/index.js";
+import {setUpTables} from "./models/setUpTables.js";
 
-
-
+setUpTables();
 const app = express();
 
 app.use(express.urlencoded({ extended: true }));

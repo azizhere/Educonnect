@@ -16,7 +16,7 @@ export const createEnrollmentTable = async () => {
   await pool.execute(query);
 };
 
-createEnrollmentTable();
+
 
 export const enrollStudentInCourse = async ({ student_id, course_id }) => {
   const id = uuidv4();
