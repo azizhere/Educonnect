@@ -1,1 +1,0 @@
-// thi is the folder that we well use for static use
