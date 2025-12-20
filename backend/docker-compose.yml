@@ -14,6 +14,18 @@ services:
     volumes:
       - ./uploads:/app/uploads
     restart: unless-stopped
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: educonnect-phpmyadmin
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: root
+      PMA_PASSWORD: root
+    depends_on:
+      - mysql
+    restart: unless-stopped
 
   mysql:
     image: mysql:8.0
@@ -31,6 +43,7 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
     restart: unless-stopped
+  
 
 volumes:
   mysql_data:

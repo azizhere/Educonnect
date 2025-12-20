@@ -1,13 +1,9 @@
 # Node modules
 node_modules/
-
 # Env files
-
-
 # Logs
 logs/
 *.log
-
 # Optional system files
 .DS_Store
 Thumbs.db
